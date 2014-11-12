@@ -22,6 +22,7 @@ Features
 <a name="getting-started"></a>
 Getting Started
 ---------------
+[![Screencast](http://assets.imgix.net/videos/wordpressplugin.png?w=700)](http://vimeo.com/111582654)
 
 If you don't already have an imgix account then sign up at [imgix.com](http://www.imgix.com).
 
