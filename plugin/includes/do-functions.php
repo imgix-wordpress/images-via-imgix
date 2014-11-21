@@ -50,16 +50,29 @@ function imgix_extract_imgs($content) {
 	return $results;
 }
 
+function ensure_valid_url($url) {
+    $parsed = parse_url($url);
+
+    if (!array_key_exists('scheme', $parsed) || strpos($parsed['scheme'], 'http') !== 0) {
+        $parsed['scheme'] = 'http';
+    }
+
+    $result = $parsed['scheme'].'://'.$parsed['host'].$parsed['path'];
+
+	if (substr($result, -1) !== "/") {
+		$result .= "/";
+	}
+
+    return $result;
+}
+
 function imgix_replace_content_cdn($content){
 	global $imgix_options;
-	$slink = $imgix_options['cdn_link'];
+	$slink = ensure_valid_url($imgix_options['cdn_link']);
+
 	$auto_format = $imgix_options['auto_format'];
 	$auto_enhance = $imgix_options['auto_enhance'];
 	if(!empty($slink)) {
-
-		if (substr($slink, -1) !== "/") {
-			$slink .= "/";
-		}
 
 		// 1) Apply imgix host
 		// img src tags
