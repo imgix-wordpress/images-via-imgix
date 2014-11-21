@@ -3,8 +3,12 @@ function imgix_options_page() {
 	global $imgix_options;
  
 	ob_start(); ?>
+
+
+
 	<div class="wrap">
 		<p><img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200"></p>
+		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix/imgix-wordpress#getting-started" target="_blank">instructions and screencast.</a></p>
 		<form method="post" action="options.php">
 			<?php settings_fields('imgix_settings_group'); ?>
 
@@ -33,7 +37,6 @@ function imgix_options_page() {
 					<p class="submit">
 						<input type="submit" class="button-primary" value="<?php _e('Save Options', 'imgix_domain'); ?>" />
 					</p>
-					 <p>Simply disable the plugin to use the original wordpress image URLs again.</p>
 					</td>
 				</tr>
 			</table>
