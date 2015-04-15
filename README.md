@@ -7,7 +7,7 @@ A WordPress plugin to automatically use your existing (and future) WordPress ima
 
 * [Features](#features)
 * [Getting Started](#getting-started)
-* [Coming Soon](#coming-soon)
+* [Updates](#updates)
 
 <a name="features"></a>
 Features
@@ -34,8 +34,8 @@ If you don't already have an imgix account then sign up at [imgix.com](http://ww
 
 4. Go to a post on your WordPress blog and ensure your images are now serving through imgix.
 
-<a name="coming-soon"></a>
-Coming Soon
------------
+<a name="Updates"></a>
+Updates
+-------
 
-A future release will include the ability to edit individual images via the WordPress post editor.
+If you find bugs or have a feature request please open a [github issue](https://github.com/imgix/imgix-wordpress/issues). Thanks!
