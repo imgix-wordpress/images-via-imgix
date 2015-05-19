@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Documentation TODO
+ *
+ * @return array
+ */
 function imgix_extract_img_details($content) {
 	preg_match_all('/-([0-9]+)x([0-9]+)\.([^"]+)/', $content, $matches);
 
@@ -31,8 +36,13 @@ function imgix_extract_img_details($content) {
 	return $data;
 }
 
+/**
+ * Extract all img tags from a given $content block.
+ *
+ * @return array An array of matching arrays with two keys: 'url' and 'params'
+ */
 function imgix_extract_imgs($content) {
-	preg_match_all('/src="http.+\/([^\s]+?)"/', $content, $matches);
+	preg_match_all('/src=["\']http.+\/([^\s]+?)["\']/', $content, $matches);
 	$results = array();
 
 	if (sizeof($matches) > 0) {
@@ -43,27 +53,32 @@ function imgix_extract_imgs($content) {
 			} else {
 				array_push($results, array('url' => $v, 'params' => ''));
 			}
-
 		}
 	}
 
 	return $results;
 }
 
+/**
+ * Sanitize a given URL to make sure it has a scheme, host, path, and ends
+ * with a '/'.
+ *
+ * @return string A sanitized, full-qualified URL.
+ */
 function ensure_valid_url($url) {
-    $parsed = parse_url($url);
+		$parsed = parse_url($url);
 
-    if (!array_key_exists('scheme', $parsed) || strpos($parsed['scheme'], 'http') !== 0) {
-        $parsed['scheme'] = 'http';
-    }
+		if (!array_key_exists('scheme', $parsed) || strpos($parsed['scheme'], 'http') !== 0) {
+				$parsed['scheme'] = 'http';
+		}
 
-    $result = $parsed['scheme'].'://'.$parsed['host'].$parsed['path'];
+		$result = $parsed['scheme'].'://'.$parsed['host'].$parsed['path'];
 
-	if (substr($result, -1) !== "/") {
-		$result .= "/";
-	}
+		if (substr($result, -1) !== "/") {
+			$result .= "/";
+		}
 
-    return $result;
+		return $result;
 }
 
 function imgix_replace_content_cdn($content){
