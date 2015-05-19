@@ -1,8 +1,8 @@
 === imgix plugin for wordpress ===
 
-Requires at least: 2.0.2
+Requires at least: 3.3
 
-Tested up to: 4.0.0
+Tested up to: Latest
 
 License: BSD-2
 
