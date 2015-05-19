@@ -1,5 +1,7 @@
 ![imgix logo](https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200)
 
+![Build Status](https://travis-ci.org/imgix/imgix-wordpress.svg)
+
 imgix-wordpress
 ===============
 
