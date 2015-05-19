@@ -5,7 +5,7 @@ notifications:
   on_failure: change
 
 php:
-  - 5.3
+  - 5.4
   - 5.5
 
 env:
@@ -13,10 +13,10 @@ env:
 
 matrix:
   include:
-    - php: 5.3
-      env: WP_VERSION=2.0.2 WP_MULTISITE=0
-    - php: 5.3
-      env: WP_VERSION=4.0.0 WP_MULTISITE=0
+    - php: 5.5
+      env: WP_VERSION=2.0.4 WP_MULTISITE=0
+    - php: 5.5
+      env: WP_VERSION=4.0 WP_MULTISITE=0
 
 
 before_script:
