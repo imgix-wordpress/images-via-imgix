@@ -104,9 +104,11 @@ function imgix_replace_content_cdn($content){
 		// 1) Apply imgix host
 		// img src tags
 		$content = str_replace('src="'.home_url('/').'wp-content/', 'src="'.$slink.'wp-content/', $content);
+		$content = str_replace('src=\''.home_url('/').'wp-content/', 'src=\''.$slink.'wp-content/', $content);
 
 		// img href tags
 		$content = str_replace('href="'.home_url('/').'wp-content/', 'href="'.$slink.'wp-content/', $content);
+		$content = str_replace('href=\''.home_url('/').'wp-content/', 'href=\''.$slink.'wp-content/', $content);
 
 		$data_w_h = imgix_extract_img_details($content);
 
