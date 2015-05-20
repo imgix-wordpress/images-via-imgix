@@ -1,11 +1,9 @@
-<?php 
+<?php
 function imgix_options_page() {
 	global $imgix_options;
- 
-	ob_start(); ?>
 
-
-
+	ob_start();
+?>
 	<div class="wrap">
 		<p><img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200"></p>
 		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix/imgix-wordpress#getting-started" target="_blank">instructions and screencast.</a></p>
@@ -15,7 +13,7 @@ function imgix_options_page() {
 			<table>
 
 				<tr>
-					<td><label class="description" for="imgix_settings[cdn_link]"><?php _e('imgix Host', 'imgix_domain'); ?></td> 
+					<td><label class="description" for="imgix_settings[cdn_link]"><?php _e('imgix Host', 'imgix_domain'); ?></td>
 					  <td><input id="imgix_settings[cdn_link]" type="text" name="imgix_settings[cdn_link]" value="<?php echo $imgix_options['cdn_link']; ?>" style="width:270px" /><small></td>
 					  <td>Example: http://yourcompany.imgix.net/</td>
 				</tr>
@@ -42,11 +40,11 @@ function imgix_options_page() {
 			</table>
 		</form>
 
- <p class="description">This Plugin is powered and created by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find the code on <a href="https://github.com/imgix/imgix-wordpress" target="_blank">github</a>.
-
-</p>
+		<p class="description">
+			This Plugin is powered and created by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find the code on <a href="https://github.com/imgix/imgix-wordpress" target="_blank">GitHub</a>.
+		</p>
 	</div>
-	<?php
+<?php
 	echo ob_get_clean();
 }
 
