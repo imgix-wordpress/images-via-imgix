@@ -1,12 +1,24 @@
 <?php
 
 /**
- * Documentation TODO
+ * Parse through img element src attributes to extract height and width parameters
+ * based on the structure of the src URL's path.
  *
- * @return array
+ * For example, if we are giving an img src ending in "-400x300.png",
+ * we return an array structured like so:
+ *
+ *    array(array(
+ *      'raw' => '-400x300.png',
+ *      'w' => '400',
+ *      'h' => '300',
+ *      'type' => 'png',
+ *      'extra' => ''
+ *    ))
+ *
+ * @return array An array of arrays that has extracted the URL's inferred w', 'h', and 'type'
  */
 function imgix_extract_img_details($content) {
-	preg_match_all('/-([0-9]+)x([0-9]+)\.([^"]+)/', $content, $matches);
+	preg_match_all('/-([0-9]+)x([0-9]+)\.([^"\']+)/', $content, $matches);
 
 	$lookup = array('raw', 'w', 'h', 'type');
 	$data = array();

@@ -72,11 +72,63 @@ class DoFunctionsTest extends WP_UnitTestCase {
 		$this->assertEquals($expected[0], $result[0]);
 	}
 
+	// #imgix_extract_img_details
+
+	function test_imgix_extract_img_details_noop() {
+		$content = "youshallnotmatch.png";
+		$expected = array();
+		$result = imgix_extract_img_details($content);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	function test_imgix_extract_img_details_sanity() {
+		$content = "-400x300.png";
+		$expected = array(array(
+			'raw' => '-400x300.png',
+			'w' => '400',
+			'h' => '300',
+			'type' => 'png',
+			'extra' => ''
+		));
+		$result = imgix_extract_img_details($content);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	function test_imgix_extract_img_details_img_tag_single_quote() {
+		$content = "<img src='https://google.com/cats-400x300.gif' />";
+		$expected = array(array(
+			'raw' => '-400x300.gif',
+			'w' => '400',
+			'h' => '300',
+			'type' => 'gif',
+			'extra' => ''
+		));
+		$result = imgix_extract_img_details($content);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	function test_imgix_extract_img_details_img_tag_double_quote() {
+		$content = "<img src=\"https://google.com/cats-400x300.gif\" />";
+		$expected = array(array(
+			'raw' => '-400x300.gif',
+			'w' => '400',
+			'h' => '300',
+			'type' => 'gif',
+			'extra' => ''
+		));
+		$result = imgix_extract_img_details($content);
+
+		$this->assertEquals($expected, $result);
+	}
+
 	// #imgix_replace_content_cdn
 
 	// function test_imgix_replace_content_cdn_does_nothing_if_imgix_options_cdn_link_is_not_valid() {
 	// 	global $imgix_options;
-	// 	$imgix_options = array('cdn_link' => 'https://google.com/cats.gif');
+	// 	$imgix_options = array('cdn_link' => 'https://my-source.imgix.com/cats.gif');
 
 	// 	$string = "<img src=\"https://google.com/cats.gif?party=1&bad-vibes=0\" />";
 	// 	$this->assertEquals($string, imgix_replace_content_cdn($string));
