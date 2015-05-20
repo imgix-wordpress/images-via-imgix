@@ -25,9 +25,11 @@ module.exports = function(grunt) {
 			}
 		}
 
-		var zipFile = "imgix_plugin" + version + ".zip";
+		var zipFile = "imgix_plugin-" + version + ".zip";
 
-		execRun('zip -r ' + zipFile + ' plugin/');
+		execRun('cp -pRv plugin imgix-wordpress/');
+		execRun('zip -r ' + zipFile + ' imgix-wordpress/');
+		execRun('rm -rf imgix-wordpress');
 	});
 
 	grunt.registerTask('default', 'buildzip');
