@@ -4,7 +4,7 @@
  * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix/imgix-wordpress" target="_blank">Learn more</a>.
  * Author: imgix
  * Author URI: http://www.imgix.com
- * Version: 1.0.1
+ * Version: 1.0.2
 */
 
 // Variables
