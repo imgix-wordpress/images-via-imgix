@@ -41,3 +41,18 @@ Updates
 -------
 
 If you find bugs or have a feature request please open a [github issue](https://github.com/imgix/imgix-wordpress/issues). Thanks!
+
+Testing
+-------
+
+This plugin uses phpunit to run its tests. You will need to set up a local test database to run these tests. You can do that using the bootstrap scrip:
+
+```
+$ bin/install-wp-tests.sh imgix_wordpress_tests <YOUR MYSQL USERNAME> <YOUR MYSQL PASSWORD>
+```
+
+Then running the tests is as simple as:
+
+```
+$ phpunit
+```
