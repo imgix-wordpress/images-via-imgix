@@ -162,5 +162,7 @@ function imgix_replace_content_cdn($content){
 
 add_filter('the_content','imgix_replace_content_cdn');
 add_filter('post_thumbnail_html', 'imgix_replace_content_cdn', 10, 2);
-
+if(wp_get_theme('genesis')->exists()) {
+	add_filter('genesis_get_image', 'imgix_replace_content_cdn', 10);
+}
 ?>
