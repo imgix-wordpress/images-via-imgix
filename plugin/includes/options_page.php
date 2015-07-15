@@ -31,6 +31,12 @@ function imgix_options_page() {
 				</tr>
 
 				<tr>
+					<td><label class="description" for="imgix_settings[crop_thumbnails]"><?php _e('<a href="https://www.imgix.com/docs/reference/size#param-fit" target="_blank">Crop Thumbnails</a> ', 'crop_thumbnails'); ?></label></td>
+					<td><input id="imgix_settings[crop_thumbnails]" type="checkbox" name="imgix_settings[crop_thumbnails]" value="1" <?php echo $imgix_options['crop_thumbnails'] === "1" ? 'checked="checked"': ''; ?> /></td>
+					<td></td>
+				</tr>
+
+				<tr>
 					<td colspan="2">
 					<p class="submit">
 						<input type="submit" class="button-primary" value="<?php _e('Save Options', 'imgix_domain'); ?>" />
