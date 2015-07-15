@@ -188,7 +188,13 @@ function parse_genesis_image_call($content, $args, $id, $html, $url, $src){
 
 add_filter('the_content','imgix_replace_content_cdn');
 add_filter('post_thumbnail_html', 'parse_thumb_image_call', 10, 6);
-if(wp_get_theme('genesis')->exists()) {
-	add_filter('genesis_get_image', 'parse_genesis_image_call', 10, 6);
+if(function_exists('wp_get_theme')) {
+	if(wp_get_theme('genesis')->exists()) {
+		add_filter('genesis_get_image', 'parse_genesis_image_call', 10, 6);
+	}
+} else {
+	if(get_current_theme() == 'genesis') {
+		add_filter('genesis_get_image', 'parse_genesis_image_call', 10, 6);
+	}
 }
 ?>
