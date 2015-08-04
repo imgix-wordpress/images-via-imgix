@@ -31,8 +31,8 @@ function imgix_options_page() {
 				</tr>
 
 				<tr>
-					<td><label class="description" for="imgix_settings[crop_thumbnails]"><?php _e('<a href="https://www.imgix.com/docs/reference/size#param-fit" target="_blank">Crop Thumbnails</a> ', 'crop_thumbnails'); ?></label></td>
-					<td><input id="imgix_settings[crop_thumbnails]" type="checkbox" name="imgix_settings[crop_thumbnails]" value="1" <?php echo $imgix_options['crop_thumbnails'] === "1" ? 'checked="checked"': ''; ?> /></td>
+					<td><label class="description" for="imgix_settings[add_dpi2_srcset]"><?php _e('Automatically add retina images using srcset', 'add_dpi2_srcset'); ?></label></td>
+					<td><input id="imgix_settings[add_dpi2_srcset]" type="checkbox" name="imgix_settings[add_dpi2_srcset]" value="1" <?php echo $imgix_options['add_dpi2_srcset'] === "1" ? 'checked="checked"': ''; ?> /></td>
 					<td></td>
 				</tr>
 
