@@ -11,8 +11,8 @@
 function add_retina($content) {
 	$pattern = '/<img((?![^>]+srcset)([^>]*)';
 	$pattern .= 'src=[\'"]([^\'"]*imgix.net[^\'"]*)[\'"]([^>]*)*?)>/i';
-	$replace = '<img$2src="$3" srcset="${3}, ${3}&dpr=2 2x"$4>';
-	return preg_replace($pattern, $replace, $content);
+	$repl = '<img$2src="$3" srcset="${3}, ${3}&dpr=2 2x, ${3}&dpr=3 3x,"$4>';
+	return preg_replace($pattern, $repl, $content);
 }
 
 /**
