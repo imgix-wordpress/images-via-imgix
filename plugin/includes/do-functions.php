@@ -11,7 +11,7 @@
 function add_retina($content) {
 	$pattern = '/<img((?![^>]+srcset)([^>]*)';
 	$pattern .= 'src=[\'"]([^\'"]*imgix.net[^\'"]*)[\'"]([^>]*)*?)>/i';
-	$repl = '<img$2src="$3" srcset="${3}, ${3}&dpr=2 2x, ${3}&dpr=3 3x,"$4>';
+	$repl = '<img$2src="$3" srcset="${3}, ${3}&amp;dpr=2 2x, ${3}&amp;dpr=3 3x,"$4>';
 	return preg_replace($pattern, $repl, $content);
 }
 
@@ -41,7 +41,7 @@ function apply_parameters_to_url($url, $params, $content) {
 	list($base_url, $base_params) = array($parts[0], $parts[1]);
 	$new_url = $old_url = $base_url;
 	$new_url .= '?' . $params;
-	$new_url .= $base_params ? '&' . $base_params : '';
+	$new_url .= $base_params ? '&amp;' . $base_params : '';
 	$old_url .= $base_params ? '?'. $base_params : '';
 	return str_replace($old_url, $new_url, $content);
 }
@@ -62,9 +62,8 @@ function get_global_params_string() {
 	if ($imgix_options['auto_enhance'])
 		array_push($auto, "enhance");
 	if (!empty($auto))
-		// Unscaped commas in the URL will messes up srcset.
 		array_push($params, 'auto='.implode('%2C', $auto));
-	return implode('&', $params);
+	return implode('&amp;', $params);
 }
 
 /**
@@ -201,8 +200,8 @@ function replace_src($src, $size) {
 				array_push($params, 'w='.$size_info['width']);
 			if (isset($size_info['height']) && $size_info['height'])
 				array_push($params, 'h='.$size_info['height']);
-			$p = implode('&', $params);
-			$p = ($p && $g_params) ? $p .'&'. $g_params : $p . $g_params;
+			$p = implode('&amp;', $params);
+			$p = ($p && $g_params) ? $p .'&amp;'. $g_params : $p . $g_params;
 			$src = apply_parameters_to_url($src, $p, $src);
 		}
 	}
@@ -224,8 +223,8 @@ function imgix_replace_non_wp_images($content){
 		//Apply image-tag-encoded params for every image in $content.
 		foreach (imgix_extract_img_details($content) as $img) {
 			$to_replace = $img['raw'];
-			$extra_params = $img['extra'] ? '&'.$img['extra'] : '';
-			$new_url = '.'.$img['type'].'?h='.$img['h'].'&w='.$img['w'].$extra_params;
+			$extra_params = $img['extra'] ? '&amp;'.$img['extra'] : '';
+			$new_url = '.'.$img['type'].'?h='.$img['h'].'&amp;w='.$img['w'].$extra_params;
 			$content = str_replace($to_replace, $new_url, $content);
 		}
 
