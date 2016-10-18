@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Find all img tags with sources matching "imgix.net" without the parameter
  * "srcset" and add the "srcset" parameter to all those images, appending a new
@@ -58,9 +57,9 @@ function get_global_params_string() {
 	$params = array();
 	// For now, only "auto" is supported.
 	$auto = array();
-        if (isset($imgix_options['auto_format']) && $imgix_options['auto_format'])
+	if (isset($imgix_options['auto_format']) && $imgix_options['auto_format'])
 		array_push($auto, "format");
-        if (isset($imgix_options['auto_enhance']) && $imgix_options['auto_enhance'])
+	if (isset($imgix_options['auto_enhance']) && $imgix_options['auto_enhance'])
 		array_push($auto, "enhance");
 	if (!empty($auto))
 		array_push($params, 'auto='.implode('%2C', $auto));
@@ -82,9 +81,9 @@ function ensure_valid_url($url) {
 	if(!$slash && strpos($pref, 'http') !== 0)
 		$pref = 'http://';
 
-        $result = $urlp['host'] ? $pref . $urlp['host'] : false;
+	$result = $urlp['host'] ? $pref . $urlp['host'] : false;
 	if($result)
-                return trailingslashit($result);
+		return trailingslashit($result);
 	return NULL;
 }
 
@@ -172,7 +171,7 @@ function imgix_extract_img_details($content) {
 function replace_host($str, $require_prefix = false) {
 	global $imgix_options;
 
-        if(!isset($imgix_options['cdn_link']) || !$imgix_options['cdn_link'])
+	if(!isset($imgix_options['cdn_link']) || !$imgix_options['cdn_link'])
 		return array($str, false);
 
 	$new_host = ensure_valid_url($imgix_options['cdn_link']);
@@ -242,6 +241,17 @@ function imgix_replace_non_wp_images($content){
 	return $content;
 }
 
+add_action('wp_head', 'imgix_wp_head', 1 );
+function imgix_wp_head() {
+	global $imgix_options;
+
+	if (isset($imgix_options['cdn_link']) && $imgix_options['cdn_link']) {
+		printf("<link rel='dns-prefetch' href='%s'/>",
+			preg_replace('/^https?:/','', untrailingslashit($imgix_options['cdn_link']) )
+		);
+	}
+}
+
 if (isset($imgix_options['add_dpi2_srcset']) && $imgix_options['add_dpi2_srcset']) {
 	function buffer_start() { ob_start("add_retina"); }
 	function buffer_end() { ob_end_flush(); }
@@ -249,4 +259,3 @@ if (isset($imgix_options['add_dpi2_srcset']) && $imgix_options['add_dpi2_srcset'
 	add_action('shutdown', 'buffer_end');
 	add_filter('the_content', 'add_retina');
 }
-?>
