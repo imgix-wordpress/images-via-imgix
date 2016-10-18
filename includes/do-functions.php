@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Find all img tags with sources matching "imgix.net" without the parameter 
- * "srcset" and add the "srcset" parameter to all those images, appending a new 
+ * Find all img tags with sources matching "imgix.net" without the parameter
+ * "srcset" and add the "srcset" parameter to all those images, appending a new
  * source using the "dpr=2" modifier.
  *
  * @return string Content with retina-enriched image tags.
@@ -170,6 +170,10 @@ function imgix_extract_img_details($content) {
  */
 function replace_host($str, $require_prefix = false) {
 	global $imgix_options;
+
+	if(!isset($imgix_options['cdn_link']))
+		return array($str, false);
+
 	$new_host = ensure_valid_url($imgix_options['cdn_link']);
 	if(!$new_host)
 		return array($str, false);
@@ -183,7 +187,7 @@ function replace_host($str, $require_prefix = false) {
 }
 
 /**
- * Given an inmage URL and the target wordpress size to display the image, 
+ * Given an inmage URL and the target wordpress size to display the image,
  * return the appropriate transformed image source.
  *
  * @return string equivalent imgix source with correct parameters.
