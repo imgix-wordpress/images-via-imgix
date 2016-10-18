@@ -58,9 +58,9 @@ function get_global_params_string() {
 	$params = array();
 	// For now, only "auto" is supported.
 	$auto = array();
-	if ($imgix_options['auto_format'])
+        if (isset($imgix_options['auto_format']) && $imgix_options['auto_format'])
 		array_push($auto, "format");
-	if ($imgix_options['auto_enhance'])
+        if (isset($imgix_options['auto_enhance']) && $imgix_options['auto_enhance'])
 		array_push($auto, "enhance");
 	if (!empty($auto))
 		array_push($params, 'auto='.implode('%2C', $auto));
@@ -241,7 +241,7 @@ function imgix_replace_non_wp_images($content){
 	return $content;
 }
 
-if($imgix_options['add_dpi2_srcset']) {
+if (isset($imgix_options['add_dpi2_srcset']) && $imgix_options['add_dpi2_srcset']) {
 	function buffer_start() { ob_start("add_retina"); }
 	function buffer_end() { ob_end_flush(); }
 	add_action('after_setup_theme', 'buffer_start');
