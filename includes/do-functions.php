@@ -81,9 +81,10 @@ function ensure_valid_url($url) {
 	$pref = array_key_exists('scheme', $urlp) ? $urlp['scheme'].'://' : $slash;
 	if(!$slash && strpos($pref, 'http') !== 0)
 		$pref = 'http://';
-	$result = $urlp['host'] ? $pref . $urlp['host'] . $urlp['path'] : '';
+
+        $result = $urlp['host'] ? $pref . $urlp['host'] : false;
 	if($result)
-		return substr($result, -1) == "/" ? $result: $result.'/';
+                return trailingslashit($result);
 	return NULL;
 }
 
@@ -171,7 +172,7 @@ function imgix_extract_img_details($content) {
 function replace_host($str, $require_prefix = false) {
 	global $imgix_options;
 
-	if(!isset($imgix_options['cdn_link']))
+        if(!isset($imgix_options['cdn_link']) || !$imgix_options['cdn_link'])
 		return array($str, false);
 
 	$new_host = ensure_valid_url($imgix_options['cdn_link']);
