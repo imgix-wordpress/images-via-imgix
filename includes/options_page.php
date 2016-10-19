@@ -6,16 +6,16 @@ function imgix_options_page() {
 ?>
 	<div class="wrap">
 		<p><img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200"></p>
-		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix/imgix-wordpress#getting-started" target="_blank">instructions and screencast.</a></p>
+		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/wladston/imgix-wordpress#getting-started" target="_blank">instructions.</a></p>
 		<form method="post" action="options.php">
 			<?php settings_fields('imgix_settings_group'); ?>
 
 			<table>
 
 				<tr>
-					<td><label class="description" for="imgix_settings[cdn_link]"><?php _e('imgix Host', 'imgix_domain'); ?></td>
-					  <td><input id="imgix_settings[cdn_link]" type="text" name="imgix_settings[cdn_link]" value="<?php echo isset($imgix_options['cdn_link']) ? $imgix_options['cdn_link'] : ''; ?>" style="width:270px" /><small></td>
-					  <td>Example: http://yourcompany.imgix.net/</td>
+					<td><label class="description" for="imgix_settings[cdn_link]"><?php _e('imgix Source', 'imgix_domain'); ?></td>
+					  <td><input id="imgix_settings[cdn_link]" type="url" name="imgix_settings[cdn_link]" placeholder="http://yourcompany.imgix.net" value="<?php echo isset($imgix_options['cdn_link']) ? $imgix_options['cdn_link'] : ''; ?>" style="width:270px" /><small></td>
+					  <td></td>
 				</tr>
 
 				<tr>
@@ -47,7 +47,7 @@ function imgix_options_page() {
 		</form>
 
 		<p class="description">
-			This Plugin is powered and created by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find the code on <a href="https://github.com/imgix/imgix-wordpress" target="_blank">GitHub</a>.
+			This plugin is powered by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find and contribute to the code on <a href="https://github.com/wladston/imgix-wordpress" target="_blank">GitHub</a>.
 		</p>
 	</div>
 <?php
@@ -55,7 +55,7 @@ function imgix_options_page() {
 }
 
 function imgix_add_options_link() {
-	add_options_page('imgix plugin', 'imgix plugin', 'manage_options', 'imgix-options', 'imgix_options_page');
+	add_options_page('imgix', 'imgix', 'manage_options', 'imgix-options', 'imgix_options_page');
 }
 add_action('admin_menu', 'imgix_add_options_link');
 
@@ -65,5 +65,3 @@ function imgix_register_settings() {
 }
 
 add_action('admin_init', 'imgix_register_settings');
-
-?>
