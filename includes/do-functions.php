@@ -23,9 +23,11 @@ function add_retina($content) {
 function imgix_extract_imgs($content) {
 	preg_match_all('/src=["\']http.+\/([^\s]+?)["\']/', $content, $matches);
 	$results = array();
-	if ($matches)
-		foreach ($matches[1] as $url)
+	if ($matches) {
+		foreach ($matches[1] as $url){
 			array_push($results, $url);
+		}
+	}
 	return $results;
 }
 
@@ -57,12 +59,18 @@ function get_global_params_string() {
 	$params = array();
 	// For now, only "auto" is supported.
 	$auto = array();
-	if (isset($imgix_options['auto_format']) && $imgix_options['auto_format'])
+	if (isset($imgix_options['auto_format']) && $imgix_options['auto_format']) {
 		array_push($auto, "format");
-	if (isset($imgix_options['auto_enhance']) && $imgix_options['auto_enhance'])
+	}
+
+	if (isset($imgix_options['auto_enhance']) && $imgix_options['auto_enhance']) {
 		array_push($auto, "enhance");
-	if (!empty($auto))
+	}
+
+	if (!empty($auto)) {
 		array_push($params, 'auto='.implode('%2C', $auto));
+	}
+
 	return implode('&amp;', $params);
 }
 
@@ -74,16 +82,24 @@ function get_global_params_string() {
  */
 function ensure_valid_url($url) {
 	$slash = strpos($url, '//') == 0 ? '//' : '';
-	if($slash)
+
+	if($slash) {
 		$url = substr($url, 2);
+	}
+
 	$urlp = parse_url($url);
 	$pref = array_key_exists('scheme', $urlp) ? $urlp['scheme'].'://' : $slash;
-	if(!$slash && strpos($pref, 'http') !== 0)
+
+	if(!$slash && strpos($pref, 'http') !== 0) {
 		$pref = 'http://';
+	}
 
 	$result = $urlp['host'] ? $pref . $urlp['host'] : false;
-	if($result)
+
+	if($result) {
 		return trailingslashit($result);
+	}
+
 	return NULL;
 }
 
@@ -94,22 +110,26 @@ function ensure_valid_url($url) {
  */
 function get_size_info($size){
 	global $_wp_additional_image_sizes;
-	if($size == 'original')
+	if($size == 'original'){
 		return array('width' => '', 'height' => '', 'crop' => false);
-	elseif(is_array($size))
+	}
+	elseif(is_array($size)){
 		return array('width' => $size[1],
 		             'height' => $size[0],
 		             'crop' => false);
-	elseif (in_array($size, array('thumbnail', 'medium', 'large')))
+	}
+	elseif (in_array($size, array('thumbnail', 'medium', 'large'))){
 		return array('width' => get_option($size . '_size_w'),
 					 'height' => get_option($size . '_size_h'),
 					 'crop' => (bool) get_option( $size . '_crop'));
-	elseif(isset($_wp_additional_image_sizes[$size]))
+	}
+	elseif(isset($_wp_additional_image_sizes[$size])){
 		return array('width' => $_wp_additional_image_sizes[$size]['width'],
 					 'height' => $_wp_additional_image_sizes[$size]['height'],
 					 'crop' => $_wp_additional_image_sizes[$size]['crop']);
-	else
-		return NULL;
+	}
+
+	return NULL;
 }
 
 /**
@@ -171,12 +191,14 @@ function imgix_extract_img_details($content) {
 function replace_host($str, $require_prefix = false) {
 	global $imgix_options;
 
-	if(!isset($imgix_options['cdn_link']) || !$imgix_options['cdn_link'])
+	if(!isset($imgix_options['cdn_link']) || !$imgix_options['cdn_link']){
 		return array($str, false);
+	}
 
 	$new_host = ensure_valid_url($imgix_options['cdn_link']);
-	if(!$new_host)
+	if(!$new_host){
 		return array($str, false);
+	}
 	// As soon as srcset is supported…
 	//$prefix = $require_prefix? 'srcs?e?t?=[\'"]|,[\S+\n\r\s]*': '';
 	$prefix = $require_prefix? 'src=[\'"]': '';
@@ -199,12 +221,15 @@ function replace_src($src, $size) {
 		if ($match_src) {
 			$g_params = get_global_params_string();
 			$params = array();
-			if (isset($size_info['crop']) && $size_info['crop'])
+			if (isset($size_info['crop']) && $size_info['crop']) {
 				array_push($params, 'fit=crop');
-			if (isset($size_info['width']) && $size_info['width'])
+			}
+			if (isset($size_info['width']) && $size_info['width']) {
 				array_push($params, 'w='.$size_info['width']);
-			if (isset($size_info['height']) && $size_info['height'])
+			}
+			if (isset($size_info['height']) && $size_info['height']) {
 				array_push($params, 'h='.$size_info['height']);
+			}
 			$p = implode('&amp;', $params);
 			$p = ($p && $g_params) ? $p .'&amp;'. $g_params : $p . $g_params;
 			$src = apply_parameters_to_url($src, $p, $src);
@@ -235,8 +260,9 @@ function imgix_replace_non_wp_images($content){
 
 		// Apply global parameters.
 		$g_params = get_global_params_string();
-		foreach (imgix_extract_imgs($content) as $img_url)
+		foreach (imgix_extract_imgs($content) as $img_url)	{
 			$content = apply_parameters_to_url($img_url, $g_params, $content);
+		}
 	}
 	return $content;
 }
