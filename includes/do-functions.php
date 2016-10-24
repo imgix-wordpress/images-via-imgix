@@ -238,14 +238,46 @@ function replace_src($src, $size) {
 	return $src;
 }
 
-function no_image_downsize($return, $id, $size) {
-	$url = wp_get_attachment_url($id);
-	$new_url = replace_src($url, $size);
-	$size_info = get_size_info($size);
-	return array($new_url, $size_info['width'], $size_info['height'], true);
-}
+function imgix_file_url( $url ) {
 
-add_filter('image_downsize', 'no_image_downsize', 10, 3);
+	global $imgix_options;
+
+	$imgix_url = $imgix_options['cdn_link'];
+	$file = pathinfo( $url );
+
+	if ( in_array( $file['extension'], ['jpg','gif','png','jpeg'] ) ) {
+		return str_replace( get_bloginfo('wpurl'), $imgix_url, $url );
+	}
+
+	return $url;
+}
+add_filter('wp_get_attachment_url', 'imgix_file_url');
+
+/**
+ *
+ * @param array $sources
+ * @param array $size_array
+ * @param string $image_src
+ * @param array $image_meta
+ * @param $attachment_id
+ *
+ * @return [type]          [description]
+ */
+function imgix_cdn_srcset($sources, $size_array, $image_src, $image_meta, $attachment_id ){
+
+	global $imgix_options;
+
+	$imgix_url = $imgix_options['cdn_link'];
+
+	foreach ( $sources as $source ) {
+
+		$sources[ $source['value'] ]['url'] = str_replace( get_bloginfo('wpurl'), $imgix_url, $sources[ $source['value'] ]['url']);
+
+	}
+
+	return $sources;
+}
+add_filter( 'wp_calculate_image_srcset', 'imgix_cdn_srcset', 10, 5 );
 
 function imgix_replace_non_wp_images($content){
 	list($content, $match) = replace_host($content, true);
