@@ -213,7 +213,6 @@ function replace_src($src, $size) {
 	return $src;
 }
 
-add_filter('image_downsize', 'no_image_downsize', 10, 3);
 function no_image_downsize($return, $id, $size) {
 	$url = wp_get_attachment_url($id);
 	$new_url = replace_src($url, $size);
@@ -221,7 +220,8 @@ function no_image_downsize($return, $id, $size) {
 	return array($new_url, $size_info['width'], $size_info['height'], true);
 }
 
-add_filter('the_content', 'imgix_replace_non_wp_images');
+add_filter('image_downsize', 'no_image_downsize', 10, 3);
+
 function imgix_replace_non_wp_images($content){
 	list($content, $match) = replace_host($content, true);
 	if($match) {
@@ -241,7 +241,8 @@ function imgix_replace_non_wp_images($content){
 	return $content;
 }
 
-add_action('wp_head', 'imgix_wp_head', 1 );
+add_filter('the_content', 'imgix_replace_non_wp_images');
+
 function imgix_wp_head() {
 	global $imgix_options;
 
@@ -251,6 +252,8 @@ function imgix_wp_head() {
 		);
 	}
 }
+
+add_action('wp_head', 'imgix_wp_head', 1 );
 
 if (isset($imgix_options['add_dpi2_srcset']) && $imgix_options['add_dpi2_srcset']) {
 	function buffer_start() { ob_start("add_retina"); }
