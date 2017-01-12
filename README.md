@@ -1,14 +1,14 @@
 ![imgix logo](https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200)
 
-![Build Status](https://travis-ci.org/imgix/imgix-wordpress.svg)
-
 imgix-wordpress
 ===============
 
-A WordPress plugin to automatically use your existing (and future) WordPress images via imgix for smaller, faster, and better looking images.
+A community powered WordPress plugin to automatically load all your existing (and future) WordPress images via the [imgix](https://www.imgix.com/) service for smaller, faster, and better looking images.
 
 * [Features](#features)
 * [Getting Started](#getting-started)
+* [History](#history)
+* [Testing](#testing)
 
 <a name="features"></a>
 Features
@@ -34,6 +34,15 @@ If you don't already have an imgix account then sign up at [imgix.com](http://ww
 
 4. Go to a post on your WordPress blog and ensure your images are now serving through imgix.
 
+<a name="history"></a>
+History
+--------
+
+Originally this plugin was hosted as part of the official [imgix](https://github.com/imgix) organisation. It was depreciated as they focused their efforts on the [PHP library](https://github.com/imgix/imgix-php).
+
+This plugin is maintained and managed by the community. Imgix have kindly permitted the use of their name here but it should be noted that there is no official support available for this plugin. If you've got any problems [submit an issue on this repo](https://github.com/imgix-wordpress/imgix-wordpress/issues/new).
+
+<a name="testing"></a>
 Testing
 -------
 
