@@ -8,8 +8,8 @@
  *
  * @wordpress-plugin
  * Plugin Name: imgix
- * PLugin URI:  https://github.com/wladston/imgix-wordpress
- * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/wladston/imgix-wordpress" target="_blank">Learn more</a>.
+ * Plugin URI:  https://github.com/imgix-wordpress/imgix-wordpress
+ * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/imgix-wordpress" target="_blank">Learn more</a>.
  * Version:     1.2.0
  * Author:      wladston
  * Author URI:  http://github.com/wladston

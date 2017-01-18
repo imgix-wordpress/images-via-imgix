@@ -18,7 +18,7 @@ Easily use imgix style
 
 == Installation ==
 
-See https://github.com/wladston/imgix-wordpress
+See https://github.com/imgix-wordpress/imgix-wordpress
 
 == Frequently Asked Questions ==
 

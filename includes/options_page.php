@@ -11,7 +11,7 @@ function imgix_options_page() {
 
 		<h1><img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200" alt="imgix Logo"></h1>
 
-		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/wladston/imgix-wordpress#getting-started" target="_blank">instructions.</a></p>
+		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix-wordpress/imgix-wordpress#getting-started" target="_blank">instructions.</a></p>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'imgix_settings_group' ); ?>
@@ -49,7 +49,7 @@ function imgix_options_page() {
 		</form>
 
 		<p class="description">
-			This plugin is powered by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find and contribute to the code on <a href="https://github.com/wladston/imgix-wordpress" target="_blank">GitHub</a>.
+			This plugin is powered by <a href="http://www.imgix.com" target="_blank">imgix</a>. You can find and contribute to the code on <a href="https://github.com/imgix-wordpress/imgix-wordpress" target="_blank">GitHub</a>.
 		</p>
 	</div>
 <?php
