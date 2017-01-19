@@ -1,6 +1,6 @@
 <?php
 /**
- * imgix
+ * WordPress plugin for imgix service.
  *
  * @package imgix
  * @author wladston
@@ -15,13 +15,11 @@
  * Author URI:  http://github.com/wladston
  */
 
-// Variables
 $imgix_options = get_option( 'imgix_settings' );
 
 include( 'includes/do-functions.php' );
-include( 'includes/options_page.php' );
+include( 'includes/options-page.php' );
 
-// Settings
 function imgix_plugin_admin_action_links( $links, $file ) {
 	static $my_plugin;
 

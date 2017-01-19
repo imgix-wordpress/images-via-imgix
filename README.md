@@ -18,7 +18,7 @@ Features
 * Automatically smaller and faster images with the [Auto Format](http://blog.imgix.com/post/90838796454/webp-jpeg-xr-progressive-jpg-support-w-auto) option.
 * Automatically better looking images with the [Auto Enhance](http://blog.imgix.com/post/85095931364/autoenhance) option.
 * Use arbitrary [imgix API params](http://www.imgix.com/docs/reference) when editing `<img>` tags in "Text mode" and they will pass through.
-* No lock in! Disable the plugin and your images will serve as they did before installation.
+* No lock in! Disable the plugin and your images will be served as they were before installation.
 
 <a name="getting-started"></a>
 Getting Started
