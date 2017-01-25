@@ -1,9 +1,4 @@
 language: php
-notifications:
-  on_success: never
-  on_failure: change
-  slack:
-    secure: rs6hDLN8tNCdv8DuBSM47S8Q8r1thSxxRiTN0HaWdracPQkHZIyshW1pxtmvfKdUBI7lGtYGkGGSy24GN+5jLmCRH+p17hKq3zfTyCkiKNgTf//9SXh46YyTsxr9rU20JJt/fyjW1pnF5bcLCjWJeFWMC8fe0m0dHTx7QZHXRqY=
 matrix:
   include:
     - php: 5.5.9
