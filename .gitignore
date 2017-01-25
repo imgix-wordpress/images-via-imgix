@@ -1,3 +1,5 @@
 node_modules/
 imgix_plugin-*.zip
 .DS_Store
+/vendor/
+/composer.lock

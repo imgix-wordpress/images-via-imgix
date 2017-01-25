@@ -1,0 +1,20 @@
+{
+  "name": "imgix-wordpress/imgix-wordpress",
+  "type": "wordpress-plugin",
+  "license": "BSD-2.0",
+  "description": "imgix WordPress plugin",
+  "homepage": "https://github.com/imgix-wordpress/imgix-wordpress",
+  "keywords": [
+    "wordpress",
+    "wordpress-plugin",
+    "imgix"
+  ],
+  "require": {
+    "php": "^5.5.9 || ^7.0"
+  },
+  "require-dev": {
+    "frozzare/wp-test-suite": "^1.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
