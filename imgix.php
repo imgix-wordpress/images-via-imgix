@@ -17,6 +17,7 @@
 
 $imgix_options = get_option( 'imgix_settings' );
 
+include( 'includes/compability.php' );
 include( 'includes/do-functions.php' );
 include( 'includes/options-page.php' );
 

@@ -3,12 +3,10 @@
 class DoFunctionsTest extends WP_UnitTestCase {
 
 	protected static $upload_url;
-	protected static $upload_subdir;
 
 	public static function setUpBeforeClass() {
-		$wp_upload_dir       = wp_get_upload_dir();
-		self::$upload_url    = $wp_upload_dir['url'];
-		self::$upload_subdir = $wp_upload_dir['subdir'];
+		$wp_upload_dir    = wp_upload_dir( null, false );
+		self::$upload_url = $wp_upload_dir['url'];
 	}
 
 	public static function tearDownAfterClass() {
@@ -167,8 +165,6 @@ class DoFunctionsTest extends WP_UnitTestCase {
 
 		$this->assertEquals( $expected, imgix_replace_non_wp_images( $string ) );
 	}
-
-
 
 
 	protected function generate_upload_file_url( $filename ) {
