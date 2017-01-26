@@ -46,7 +46,7 @@ This plugin is maintained and managed by the community. Imgix have kindly permit
 Testing
 -------
 
-This plugin uses phpunit to run its tests. You will need to set up a local test database to run these tests. You can do that using the bootstrap scrip:
+This plugin uses phpunit to run its tests. You will need to set up a local test database to run these tests. You can do that using the bootstrap script:
 
 ```
 $ bin/install-wp-tests.sh imgix_wordpress_tests <YOUR MYSQL USERNAME> <YOUR MYSQL PASSWORD>
@@ -56,4 +56,20 @@ Then running the tests is as simple as:
 
 ```
 $ phpunit
+```
+
+<a name="testing-docker"></a>
+Testing with Docker
+-------
+
+This plugin uses phpunit to run its tests. You can use Docker if you don't want to set up the test database locally. 
+
+Start the database:     
+```
+$ docker-compose up mysql -d
+```
+
+Then running the tests is as simple as:   
+```
+$ docker-compose up phpunit
 ```
