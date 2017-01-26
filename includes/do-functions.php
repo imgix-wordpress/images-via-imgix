@@ -106,7 +106,7 @@ function ensure_valid_url( $url ) {
 		$pref = 'http://';
 	}
 
-	$result = $urlp['host'] ? $pref . $urlp['host'] : false;
+	$result = ! empty( $urlp['host'] ) ? $pref . $urlp['host'] : false;
 
 	if ( $result ) {
 		return trailingslashit( $result );
@@ -275,15 +275,14 @@ function imgix_file_url( $url ) {
 
 	global $imgix_options;
 
-	$imgix_url = $imgix_options['cdn_link'];
-	$file = pathinfo( $url );
-
-	if ( ! $imgix_url ) {
+	if ( empty ( $imgix_options['cdn_link'] ) ) {
 		return $url;
 	}
 
+	$file = pathinfo( $url );
+
 	if ( in_array( $file['extension'], array( 'jpg', 'gif', 'png', 'jpeg' ) ) ) {
-		return str_replace( get_bloginfo( 'wpurl' ), $imgix_url, $url );
+		return str_replace( get_bloginfo( 'wpurl' ), $imgix_options['cdn_link'], $url );
 	}
 
 	return $url;
@@ -302,11 +301,6 @@ add_filter( 'imgix/add-image-url', 'imgix_file_url' );
  * @return array $sources
  */
 function imgix_cdn_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
-
-	global $imgix_options;
-
-	$imgix_url = $imgix_options['cdn_link'];
-
 	foreach ( $sources as $source ) {
 
 		$sources[ $source['value'] ]['url'] = apply_filters( 'imgix/add-image-url', $sources[ $source['value'] ]['url'] );
