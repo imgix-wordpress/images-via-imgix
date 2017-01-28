@@ -15,6 +15,8 @@
  * Author URI:  http://github.com/wladston
  */
 
+define('IMGIX_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
 $imgix_options = get_option( 'imgix_settings' );
 
 include( 'includes/do-functions.php' );

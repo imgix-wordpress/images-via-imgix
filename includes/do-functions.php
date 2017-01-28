@@ -108,7 +108,7 @@ function imgix_ensure_valid_url( $url ) {
 
 	$result = $urlp['host'] ? $pref . $urlp['host'] : false;
 
-	if ( $result ) {
+	if ( false !== $result ) {
 		return trailingslashit( $result );
 	}
 
@@ -139,10 +139,12 @@ function imgix_extract_img_details( $content ) {
 	$lookup = array( 'raw', 'w', 'h', 'type' );
 	$data = array();
 
+	if ( ! is_array($matches) ) {
+		return $data;
+	}
+
 	foreach ( $matches as $k => $v ) {
-
 		foreach ( $v as $index => $value ) {
-
 			if ( ! array_key_exists( $index, $data ) ) {
 				$data[ $index ] = array();
 			}
@@ -188,7 +190,7 @@ function imgix_replace_host( $str, $require_prefix = false ) {
 
 	// As soon as srcset is supported…
 	// $prefix = $require_prefix? 'srcs?e?t?=[\'"]|,[\S+\n\r\s]*': '';
-	$prefix = $require_prefix? 'src=[\'"]': '';
+	$prefix = $require_prefix ? 'src=[\'"]' : '';
 	$src = '(' . preg_quote( home_url( '/' ), '/' ) . '|\/\/)';
 	$patt = '/(' . $prefix . ' )' . $src . '/i';
 	$str = preg_replace( $patt, '$1' . $new_host, $str, -1, $count );
@@ -227,10 +229,6 @@ add_filter( 'imgix/add-image-url', 'imgix_file_url' );
  * @return array $sources
  */
 function imgix_cdn_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
-
-	global $imgix_options;
-
-	$imgix_url = $imgix_options['cdn_link'];
 
 	foreach ( $sources as $source ) {
 
