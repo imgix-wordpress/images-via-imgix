@@ -3,7 +3,7 @@
 imgix-wordpress
 ===============
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/imgix-wordpress/imgix-wordpress/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/imgix-wordpress/imgix-wordpress/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/imgix-wordpress/images-via-imgix/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/imgix-wordpress/imgix-wordpress/?branch=master)
 
 A community powered WordPress plugin to automatically load all your existing (and future) WordPress images via the [imgix](https://www.imgix.com/) service for smaller, faster, and better looking images.
 
@@ -64,14 +64,14 @@ $ phpunit
 Testing with Docker
 -------
 
-This plugin uses phpunit to run its tests. You can use Docker if you don't want to set up the test database locally. 
+This plugin uses phpunit to run its tests. You can use Docker if you don't want to set up the test database locally.
 
-Start the database:     
+Start the database:
 ```
 $ docker-compose up mysql -d
 ```
 
-Then running the tests is as simple as:   
+Then running the tests is as simple as:
 ```
 $ docker-compose up phpunit
 ```

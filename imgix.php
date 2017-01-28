@@ -7,19 +7,19 @@
  * @license BSD-2
  *
  * @wordpress-plugin
- * Plugin Name: imgix
- * Plugin URI:  https://github.com/imgix-wordpress/imgix-wordpress
- * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/imgix-wordpress" target="_blank">Learn more</a>.
+ *
+ * Plugin Name: images-via-imigix
+ * Plugin URI:  https://github.com/imgix-wordpress/images-via-imgix
+ * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/images-via-imgix" target="_blank">Learn more</a>.
  * Version:     1.2.0
  * Author:      wladston
- * Author URI:  http://github.com/wladston
+ * Author URI:  http://github.com/imgix-wordpress
  */
 
 define('IMGIX_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 $imgix_options = get_option( 'imgix_settings' );
 
-include( 'includes/compability.php' );
 include( 'includes/do-functions.php' );
 include( 'includes/options-page.php' );
 
