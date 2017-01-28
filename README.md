@@ -1,9 +1,9 @@
 ![imgix logo](assets/images/imgix-logo.png)
 
-imgix-wordpress
+Images via imgix
 ===============
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/imgix-wordpress/images-via-imgix/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/imgix-wordpress/imgix-wordpress/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/imgix-wordpress/images-via-imgix/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/imgix-wordpress/images-via-imgix/?branch=master) [![Build Status](https://travis-ci.org/imgix-wordpress/imgix-wordpress.svg?branch=master)](https://travis-ci.org/imgix-wordpress/imgix-wordpress)
 
 A community powered WordPress plugin to automatically load all your existing (and future) WordPress images via the [imgix](https://www.imgix.com/) service for smaller, faster, and better looking images.
 
