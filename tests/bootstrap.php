@@ -1,15 +1,10 @@
 <?php
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
-if ( ! $_tests_dir ) {
-	$_tests_dir = '/tmp/wordpress-tests-lib';
-}
+// Load Composer autoload.
+require __DIR__ . '/../vendor/autoload.php';
 
-require_once $_tests_dir . '/includes/functions.php';
+// Load Papi loader file as plugin.
+WP_Test_Suite::load_plugins( __DIR__ . '/../imgix.php' );
 
-function _manually_load_plugin() {
-	require dirname( dirname( __FILE__ ) ) . '/plugin/imgix.php';
-}
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
-
-require $_tests_dir . '/includes/bootstrap.php';
+// Run the WordPress test suite.
+WP_Test_Suite::run();
