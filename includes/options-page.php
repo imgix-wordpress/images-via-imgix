@@ -12,9 +12,10 @@ function imgix_options_page() {
 ?>
 	<div class="wrap">
 
-		<h1><img src="https://assets.imgix.net/imgix-logo-web-2014.pdf?page=2&fm=png&w=200&h=200" alt="imgix Logo"></h1>
+                <h1><img src="<?php echo IMGIX_PLUGIN_URL; ?>assets/images/imgix-logo.png" alt="imgix Logo"></h1>
+                <h1><img src="<?php echo IMGIX_PLUGIN_URL; ?>assets/images/imgix-logo.png" alt="imgix Logo"></h1>
 
-		<p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix-wordpress/imgix-wordpress#getting-started" target="_blank">instructions.</a></p>
+                <p><strong>Need help getting started?</strong> It's easy! Check out our <a href="https://github.com/imgix-wordpress/imgix-wordpress#getting-started" target="_blank">instructions.</a></p>
 
 		<form method="post" action="options.php">
 			<?php settings_fields( 'imgix_settings_group' ); ?>
@@ -29,12 +30,12 @@ function imgix_options_page() {
 					</tr>
 
 					<tr>
-						<th><label class="description" for="imgix_settings[auto_format]"><?php esc_html_e( '<a href="http://blog.imgix.com/post/90838796454/webp-jpeg-xr-progressive-jpg-support-w-auto" target="_blank">Auto Format</a> Images', 'auto_format' ); ?></label></th>
+                                                <th><label class="description" for="imgix_settings[auto_format]"><?php esc_html_e( 'Auto Format Images', 'auto_format' ); ?></label></th>
 						<td><input id="imgix_settings[auto_format]" type="checkbox" name="imgix_settings[auto_format]" value="1" <?php echo isset( $imgix_options['auto_format'] ) && '1' === $imgix_options['auto_format'] ? 'checked="checked"' : ''; ?> /></td>
 					</tr>
 
 					<tr>
-						<th><label class="description" for="imgix_settings[auto_enhance]"><?php esc_html_e( '<a href="http://blog.imgix.com/post/85095931364/autoenhance" target="_blank">Auto Enhance</a> Images', 'auto_enhance' ); ?></label></th>
+                                                <th><label class="description" for="imgix_settings[auto_enhance]"><?php esc_html_e( 'Auto Enhance Images', 'auto_enhance' ); ?></label></th>
 						<td><input id="imgix_settings[auto_enhance]" type="checkbox" name="imgix_settings[auto_enhance]" value="1" <?php echo isset( $imgix_options['auto_enhance'] ) && '1' === $imgix_options['auto_enhance'] ? 'checked="checked"' : ''; ?> /></td>
 					</tr>
 

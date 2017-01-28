@@ -12,7 +12,7 @@
  * @param $content
  * @return string Content with retina-enriched image tags.
  */
-function add_retina( $content ) {
+function imgix_add_retina( $content ) {
 	$pattern = '/<img((?![^>]+srcset )([^>]*)';
 	$pattern .= 'src=[\'"]([^\'"]*imgix.net[^\'"]*\?[^\'"]*w=[^\'"]*)[\'"]([^>]*)*?)>/i';
 	$repl = '<img$2src="$3" srcset="${3}, ${3}&amp;dpr=2 2x, ${3}&amp;dpr=3 3x,"$4>';
@@ -46,7 +46,7 @@ function imgix_extract_imgs( $content ) {
  *
  * @return string Content with matching URLs having the new querystrings.
  */
-function apply_parameters_to_url( $url, $params, $content ) {
+function imgix_apply_parameters_to_url( $url, $params, $content ) {
 	$parts = explode( '?', $url . '?' );
 
 	list( $base_url, $base_params ) = array( $parts[0], $parts[1] );
@@ -65,7 +65,7 @@ function apply_parameters_to_url( $url, $params, $content ) {
  *
  * @return string Global parameters to be appened at the end of each img URL.
  */
-function get_global_params_string() {
+function imgix_get_global_params_string() {
 	global $imgix_options;
 	$params = array();
 	// For now, only "auto" is supported.
@@ -92,7 +92,7 @@ function get_global_params_string() {
  *
  * @return string A sanitized URL.
  */
-function ensure_valid_url( $url ) {
+function imgix_ensure_valid_url( $url ) {
 	$slash = strpos( $url, '//' ) == 0 ? '//' : '';
 
 	if ( $slash ) {
@@ -108,45 +108,8 @@ function ensure_valid_url( $url ) {
 
 	$result = ! empty( $urlp['host'] ) ? $pref . $urlp['host'] : false;
 
-	if ( $result ) {
+	if ( false !== $result ) {
 		return trailingslashit( $result );
-	}
-
-	return null;
-}
-
-/**
- * Given a wordpress registered size keyword, return its properties.
- *
- * @return array Size's width, height and crop values.
- */
-function get_size_info( $size ) {
-	global $_wp_additional_image_sizes;
-
-	if ( $size === 'original' ) {
-		return array(
-			'width' => '',
-			'height' => '',
-			'crop' => false,
-		);
-	} elseif ( is_array( $size ) ) {
-		return array(
-			'width' => $size[1],
-			'height' => $size[0],
-			'crop' => false,
-		);
-	} elseif ( in_array( $size, array( 'thumbnail', 'medium', 'large' ), true ) ) {
-		return array(
-			'width' => get_option( $size . '_size_w' ),
-			'height' => get_option( $size . '_size_h' ),
-			'crop' => (boolean) get_option( $size . '_crop' ),
-		);
-	} elseif ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
-		return array(
-			'width' => $_wp_additional_image_sizes[ $size ]['width'],
-			'height' => $_wp_additional_image_sizes[ $size ]['height'],
-			'crop' => $_wp_additional_image_sizes[ $size ]['crop'],
-		);
 	}
 
 	return null;
@@ -176,10 +139,12 @@ function imgix_extract_img_details( $content ) {
 	$lookup = array( 'raw', 'w', 'h', 'type' );
 	$data = array();
 
+	if ( ! is_array($matches) ) {
+		return $data;
+	}
+
 	foreach ( $matches as $k => $v ) {
-
 		foreach ( $v as $index => $value ) {
-
 			if ( ! array_key_exists( $index, $data ) ) {
 				$data[ $index ] = array();
 			}
@@ -211,64 +176,26 @@ function imgix_extract_img_details( $content ) {
  * @return array An array countaining the final string, and a boolean value
  * indicating if it's different from the given input string.
  */
-function replace_host( $str, $require_prefix = false ) {
+function imgix_replace_host( $str, $require_prefix = false ) {
 	global $imgix_options;
 
 	if ( ! isset( $imgix_options['cdn_link'] ) || ! $imgix_options['cdn_link'] ) {
 		return array( $str, false );
 	}
 
-	$new_host = ensure_valid_url( $imgix_options['cdn_link'] );
+	$new_host = imgix_ensure_valid_url( $imgix_options['cdn_link'] );
 	if ( ! $new_host ) {
 		return array( $str, false );
 	}
 
 	// As soon as srcset is supported…
 	// $prefix = $require_prefix? 'srcs?e?t?=[\'"]|,[\S+\n\r\s]*': '';
-	$prefix = $require_prefix? 'src=[\'"]': '';
+	$prefix = $require_prefix ? 'src=[\'"]' : '';
 	$src = '(' . preg_quote( home_url( '/' ), '/' ) . '|\/\/)';
 	$patt = '/(' . $prefix . ' )' . $src . '/i';
 	$str = preg_replace( $patt, '$1' . $new_host, $str, -1, $count );
 
 	return array( $str, (boolean) $count );
-}
-
-/**
- * Given an inmage URL and the target wordpress size to display the image,
- * return the appropriate transformed image source.
- *
- * @return string equivalent imgix source with correct parameters.
- */
-function replace_src( $src, $size ) {
-	$size_info = get_size_info( $size );
-
-	if ( $size_info ) {
-
-		list( $src, $match_src ) = replace_host( $src, false );
-
-		if ( $match_src ) {
-			$g_params = get_global_params_string();
-			$params = array();
-
-			if ( isset( $size_info['crop'] ) && $size_info['crop'] ) {
-				array_push( $params, 'fit=crop' );
-			}
-
-			if ( isset( $size_info['width'] ) && $size_info['width'] ) {
-				array_push( $params, 'w=' . $size_info['width'] );
-			}
-
-			if ( isset( $size_info['height'] ) && $size_info['height'] ) {
-				array_push( $params, 'h=' . $size_info['height'] );
-			}
-
-			$p = implode( '&amp;', $params );
-			$p = ( $p && $g_params ) ? $p . '&amp;' . $g_params : $p . $g_params;
-			$src = apply_parameters_to_url( $src, $p, $src );
-		}
-	}
-
-	return $src;
 }
 
 function imgix_file_url( $url ) {
@@ -312,7 +239,7 @@ function imgix_cdn_srcset( $sources, $size_array, $image_src, $image_meta, $atta
 add_filter( 'wp_calculate_image_srcset', 'imgix_cdn_srcset', 10, 5 );
 
 function imgix_replace_non_wp_images( $content ) {
-	list( $content, $match ) = replace_host( $content, true );
+	list( $content, $match ) = imgix_replace_host( $content, true );
 
 	if ( $match ) {
 		// Apply image-tag-encoded params for every image in $content.
@@ -324,9 +251,9 @@ function imgix_replace_non_wp_images( $content ) {
 		}
 
 		// Apply global parameters.
-		$g_params = get_global_params_string();
+		$g_params = imgix_get_global_params_string();
 		foreach ( imgix_extract_imgs( $content ) as $img_url ) {
-			$content = apply_parameters_to_url( $img_url, $g_params, $content );
+			$content = imgix_apply_parameters_to_url( $img_url, $g_params, $content );
 		}
 	}
 	return $content;
@@ -347,11 +274,15 @@ function imgix_wp_head() {
 add_action( 'wp_head', 'imgix_wp_head', 1 );
 
 if ( isset( $imgix_options['add_dpi2_srcset'] ) && $imgix_options['add_dpi2_srcset'] ) {
-	function buffer_start() {
-		ob_start( 'add_retina' ); }
-	function buffer_end() {
-		ob_end_flush(); }
-	add_action( 'after_setup_theme', 'buffer_start' );
-	add_action( 'shutdown', 'buffer_end' );
-	add_filter( 'the_content', 'add_retina' );
+	function imgix_buffer_start() {
+		ob_start( 'imgix_add_retina' );
+	}
+
+	function imgix_buffer_end() {
+		ob_end_flush();
+	}
+
+	add_action( 'after_setup_theme', 'imgix_buffer_start' );
+	add_action( 'shutdown', 'imgix_buffer_end' );
+	add_filter( 'the_content', 'imgix_add_retina' );
 }
