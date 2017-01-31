@@ -16,12 +16,8 @@
  * Author URI:  http://github.com/imgix-wordpress
  */
 
-define('IMGIX_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
-$imgix_options = get_option( 'imgix_settings' );
-
 include( 'includes/compability.php' );
-include( 'includes/do-functions.php' );
+include( 'includes/class-images-via-imgix.php' );
 include( 'includes/options-page.php' );
 
 function imgix_plugin_admin_action_links( $links, $file ) {
