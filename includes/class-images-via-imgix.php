@@ -155,6 +155,9 @@ class Images_Via_Imgix {
 		return $content;
 	}
 
+	/**
+	 * Add tag to dns prefetch cdn host
+	 */
 	public function prefetch_cdn() {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			$host = parse_url( $this->options['cdn_link'], PHP_URL_HOST );
@@ -166,6 +169,9 @@ class Images_Via_Imgix {
 		}
 	}
 
+	/**
+	 * Start output buffer if auto retina is enabled
+	 */
 	public function buffer_start_for_retina() {
 		if ( ! empty ( $this->options['add_dpi2_srcset'] ) ) {
 			$this->buffer_started = true;
@@ -173,6 +179,9 @@ class Images_Via_Imgix {
 		}
 	}
 
+	/**
+	 * Stop output buffer if it was enabled by the plugin
+	 */
 	public function buffer_end_for_retina() {
 		if ( $this->buffer_started === true ) {
 			ob_end_flush();
