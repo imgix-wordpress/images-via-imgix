@@ -21,16 +21,11 @@ include( 'includes/class-images-via-imgix.php' );
 include( 'includes/options-page.php' );
 
 function imgix_plugin_admin_action_links( $links, $file ) {
-	static $my_plugin;
-
-	if ( ! $my_plugin ) {
-		$my_plugin = plugin_basename( __FILE__ );
-	}
-
-	if ( $file === $my_plugin ) {
+	if ( $file === plugin_basename( __FILE__ ) ) {
 		$settings_link = '<a href="options-general.php?page=imgix-options">Settings</a>';
 		array_unshift( $links, $settings_link );
 	}
+
 	return $links;
 }
 
