@@ -94,7 +94,7 @@ class Images_Via_Imgix {
 
 			if ( in_array( $pathinfo['extension'], [ 'jpg', 'gif', 'png', 'jpeg' ] ) ) {
 				$parsed_url = parse_url( $url );
-				if ( $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) ) {
+				if ( isset( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) ) {
 					$cdn = parse_url( $this->options['cdn_link'] );
 					foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
 						if ( isset( $cdn[ $url_part ] ) ) {
