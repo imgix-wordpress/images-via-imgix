@@ -66,7 +66,7 @@ This plugin uses phpunit to run its tests. You can use Docker if you don't want 
 
 Start the database:
 ```
-$ docker-compose up mysql -d
+$ docker-compose up -d mysql
 ```
 
 Then running the tests is as simple as:

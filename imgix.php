@@ -8,33 +8,24 @@
  *
  * @wordpress-plugin
  *
- * Plugin Name: images-via-imigix
+ * Plugin Name: Images via imgix
  * Plugin URI:  https://github.com/imgix-wordpress/images-via-imgix
- * Description: A WordPress plugin to automatically use your existing (and future) WordPress images via <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/images-via-imgix" target="_blank">Learn more</a>.
+ * Description: A WordPress plugin to automatically use your existing (and future) WordPress images from <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/images-via-imgix" target="_blank">Learn more</a>.
  * Version:     1.2.0
  * Author:      wladston
  * Author URI:  http://github.com/imgix-wordpress
  */
 
-define('IMGIX_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
-$imgix_options = get_option( 'imgix_settings' );
-
 include( 'includes/compability.php' );
-include( 'includes/do-functions.php' );
+include( 'includes/class-images-via-imgix.php' );
 include( 'includes/options-page.php' );
 
 function imgix_plugin_admin_action_links( $links, $file ) {
-	static $my_plugin;
-
-	if ( ! $my_plugin ) {
-		$my_plugin = plugin_basename( __FILE__ );
-	}
-
-	if ( $file === $my_plugin ) {
+	if ( $file === plugin_basename( __FILE__ ) ) {
 		$settings_link = '<a href="options-general.php?page=imgix-options">Settings</a>';
 		array_unshift( $links, $settings_link );
 	}
+
 	return $links;
 }
 
