@@ -32,7 +32,10 @@ class Images_Via_Imgix {
 		add_filter( 'wp_get_attachment_url', [ $this, 'replace_image_url' ] );
 		add_filter( 'imgix/add-image-url', [ $this, 'replace_image_url' ] );
 
-		add_filter( 'wp_calculate_image_srcset', [ $this, 'replace_host_in_srcset' ], 10 );
+		add_filter( 'image_downsize', [ $this, 'image_downsize' ], 10, 3 );
+
+		add_filter( 'wp_calculate_image_srcset', [ $this, 'calculate_image_srcset' ], 10, 3 );
+
 		add_filter( 'the_content', [ $this, 'replace_images_in_content' ] );
 		add_action( 'wp_head', [ $this, 'prefetch_cdn' ], 1 );
 
@@ -109,18 +112,9 @@ class Images_Via_Imgix {
 							unset( $parsed_url[ $url_part ] );
 						}
 					}
-
-					list( $filename, $arguments ) = $this->convert_filename_to_size_args( $pathinfo['basename'] );
-
-					$arguments = array_merge( $arguments, $this->get_global_params() );
-
-					$parsed_url['path'] = trailingslashit( dirname( $parsed_url['path'] ) ) . $filename;
-
-					if ( ! empty( $arguments ) ) {
-						$parsed_url['query'] = empty( $parsed_url['query'] ) ? build_query( $arguments ) : $parsed_url['query'] . '&' . build_query( $arguments );
-					}
-
 					$url = http_build_url( $parsed_url );
+
+					$url = add_query_arg( $this->get_global_params(), $url );
 				}
 			}
 		}
@@ -129,18 +123,65 @@ class Images_Via_Imgix {
 	}
 
 	/**
-	 * Modify image urls in srcset to use imgix host.
+	 * Set params when running image_downsize
 	 *
-	 * @param array $sources
+	 * @param false|array  $return
+	 * @param int          $attachment_id
+	 * @param string|array $size
 	 *
-	 * @return array $sources
+	 * @return false|array
 	 */
-	public function replace_host_in_srcset( $sources ) {
-		foreach ( $sources as $source ) {
-			$sources[ $source['value'] ]['url'] = apply_filters( 'imgix/add-image-url', $sources[ $source['value'] ]['url'] );
+	public function image_downsize( $return, $attachment_id, $size ) {
+		if ( ! empty ( $this->options['cdn_link'] ) ) {
+			$img_url = wp_get_attachment_url( $attachment_id );
+
+			$params = [];
+			if ( is_array( $size ) ) {
+				$params['w'] = $width = isset( $size[0] ) ? $size[0] : 0;
+				$params['h'] = $height = isset( $size[1] ) ? $size[1] : 0;
+			} else {
+				$available_sizes = $this->get_all_defined_sizes();
+				if ( isset( $available_sizes[ $size ] ) ) {
+					$size        = $available_sizes[ $size ];
+					$params['w'] = $width = $size['width'];
+					$params['h'] = $height = $size['height'];
+				}
+			}
+
+			$params = array_filter( $params );
+
+			$img_url = add_query_arg( $params, $img_url );
+
+			if ( ! isset( $width ) || ! isset( $height ) ) {
+				// any other type: use the real image
+				$meta   = wp_get_attachment_metadata( $attachment_id );
+				$width  = isset( $width ) ? $width : $meta['width'];
+				$height = isset( $height ) ? $height : $meta['height'];
+			}
+
+			$return = [ $img_url, $width, $height, true ];
 		}
 
-		return $sources;
+		return $return;
+	}
+
+	/**
+	 * Change url for images in srcset
+	 *
+	 * @param array  $image_meta
+	 * @param array  $size_array
+	 * @param string $image_src
+	 *
+	 * @return array
+	 */
+	public function calculate_image_srcset( $image_meta, $size_array, $image_src ) {
+		foreach ( $image_meta as $i => $image_size ) {
+			if ( $image_size['descriptor'] === 'w' ) {
+				$image_meta[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
+			}
+		}
+
+		return $image_meta;
 	}
 
 	/**
@@ -214,33 +255,38 @@ class Images_Via_Imgix {
 		}
 
 		if ( ! empty( $auto ) ) {
-			$params['auto'] = implode( ',', $auto );
+			$params['auto'] = implode( '%2C', $auto );
 		}
 
 		return $params;
 	}
 
 	/**
-	 * Convert sizes in filename to parameters and returns origina filename without sizes.
-	 * If no size is found the original filename is returned.
+	 * Get all defined image sizes
 	 *
-	 * @param string $filename
-	 *
-	 * @return array with filename and size arguments.
+	 * @return array
 	 */
-	protected function convert_filename_to_size_args( $filename ) {
-		$arguments = [];
+	protected function get_all_defined_sizes() {
+		// Make thumbnails and other intermediate sizes.
+		$theme_image_sizes = wp_get_additional_image_sizes();
 
-		$filename = preg_replace_callback( '/-(?<width>\d+)x(?<height>\d+)(?<extension>\.\w{3,4}$)/', function ( $match ) use ( &$arguments ) {
-			$arguments = [
-				'w' => $match['width'],
-				'h' => $match['height']
-			];
+		$sizes = [];
+		foreach ( get_intermediate_image_sizes() as $s ) {
+			$sizes[ $s ] = [ 'width' => '', 'height' => '', 'crop' => false ];
+			if ( isset( $theme_image_sizes[ $s ] ) ) {
+				// For theme-added sizes
+				$sizes[ $s ]['width']  = intval( $theme_image_sizes[ $s ]['width'] );
+				$sizes[ $s ]['height'] = intval( $theme_image_sizes[ $s ]['height'] );
+				$sizes[ $s ]['crop']   = $theme_image_sizes[ $s ]['crop'];
+			} else {
+				// For default sizes set in options
+				$sizes[ $s ]['width']  = get_option( "{$s}_size_w" );
+				$sizes[ $s ]['height'] = get_option( "{$s}_size_h" );
+				$sizes[ $s ]['crop']   = get_option( "{$s}_crop" );
+			}
+		}
 
-			return $match['extension'];
-		}, $filename );
-
-		return [ $filename, $arguments ];
+		return $sizes;
 	}
 }
 
