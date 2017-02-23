@@ -92,7 +92,13 @@ class Images_Via_Imgix {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			$pathinfo = pathinfo( $url );
 
-			if ( in_array( $pathinfo['extension'], [ 'jpg', 'gif', 'png', 'jpeg' ] ) ) {
+			if ( isset( $pathinfo['extension'] ) && in_array( $pathinfo['extension'], [
+					'jpg',
+					'gif',
+					'png',
+					'jpeg'
+				] )
+			) {
 				$parsed_url = parse_url( $url );
 				if ( isset( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) ) {
 					$cdn = parse_url( $this->options['cdn_link'] );
