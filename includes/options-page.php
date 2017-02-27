@@ -81,6 +81,14 @@ class Imgix_Options_page {
 						</tr>
 						<tr>
 							<th>
+								<label class="description" for="imgix_settings[auto_compress]"><?php esc_html_e( 'Auto Compress Images', 'imgix' ); ?></label>
+							</th>
+							<td>
+								<input id="imgix_settings[auto_compress]" type="checkbox" name="imgix_settings[auto_compress]" value="1" <?php checked( $this->get_option( 'auto_compress' ) ) ?> />
+							</td>
+						</tr>
+						<tr>
+							<th>
 								<label class="description" for="imgix_settings[add_dpi2_srcset]"><?php esc_html_e( 'Automatically add retina images using srcset', 'imgix' ); ?></label>
 							</th>
 							<td>
