@@ -93,29 +93,20 @@ class Images_Via_Imgix {
 	 */
 	public function replace_image_url( $url ) {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
-			$pathinfo = pathinfo( $url );
+			$parsed_url = parse_url( $url );
 
-			if ( isset( $pathinfo['extension'] ) && in_array( $pathinfo['extension'], [
-					'jpg',
-					'gif',
-					'png',
-					'jpeg'
-				] )
-			) {
-				$parsed_url = parse_url( $url );
-				if ( isset( $parsed_url['host'] ) && $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) ) {
-					$cdn = parse_url( $this->options['cdn_link'] );
-					foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
-						if ( isset( $cdn[ $url_part ] ) ) {
-							$parsed_url[ $url_part ] = $cdn[ $url_part ];
-						} else {
-							unset( $parsed_url[ $url_part ] );
-						}
+			if ( isset( $parsed_url['host'], $parsed_url['path'] ) && $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) && preg_match( '/\.(jpg|jpeg|gif|png)$/', $parsed_url['path'] ) ) {
+				$cdn = parse_url( $this->options['cdn_link'] );
+				foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
+					if ( isset( $cdn[ $url_part ] ) ) {
+						$parsed_url[ $url_part ] = $cdn[ $url_part ];
+					} else {
+						unset( $parsed_url[ $url_part ] );
 					}
-					$url = http_build_url( $parsed_url );
-
-					$url = add_query_arg( $this->get_global_params(), $url );
 				}
+				$url = http_build_url( $parsed_url );
+
+				$url = add_query_arg( $this->get_global_params(), $url );
 			}
 		}
 
@@ -193,10 +184,28 @@ class Images_Via_Imgix {
 	 */
 	public function replace_images_in_content( $content ) {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
-			$content = preg_replace_callback( '/(?<=\shref="|\ssrc="|\shref=\'|\ssrc=\').*(?=\'|")/', function ( $match ) {
-				return esc_url( apply_filters( 'imgix/add-image-url', $match[0] ) );
-			}, $content );
+			if ( preg_match_all( '/<img\s[^>]*src=([\"\']??)([^\" >]*?)\1[^>]*>/iU', $content, $matches ) ) {
+				foreach ( $matches[2] as $image_src ) {
+					$content = str_replace( $image_src, $this->replace_image_url( $image_src ), $content );
+				}
+			}
 
+			if ( preg_match_all( '/<img\s[^>]*srcset=([\"\']??)([^\">]*?)\1[^>]*\/?>/iU', $content, $matches ) ) {
+
+				foreach ( $matches[2] as $image_srcset ) {
+					$new_image_srcset = preg_replace_callback( '/(\S+)(\s\d+\w)/', function ( $srcset_matches ) {
+						return $this->replace_image_url( $srcset_matches[1] ) . $srcset_matches[2];
+					}, $image_srcset );
+
+					$content = str_replace( $image_srcset, $new_image_srcset, $content );
+				}
+			}
+
+			if ( preg_match_all( '/<a\s[^>]*href=([\"\']??)([^\" >]*?)\1[^>]*>(.*)<\/a>/iU', $content, $matches ) ) {
+				foreach ( $matches[0] as $link ) {
+					$content = str_replace( $link[2], $this->replace_image_url( $link[2] ), $content );
+				}
+			}
 		}
 
 		return $content;

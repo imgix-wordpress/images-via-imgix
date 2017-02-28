@@ -74,7 +74,7 @@ class DoFunctionsTest extends WP_UnitTestCase {
 	public function test_imgix_replace_non_wp_images_no_cdn() {
 		$this->disable_cdn();
 
-		$string = '<img src="' . $this->generate_upload_file_url( 'example.gif' ) . '" />';
+		$string = '<img src="' . $this->generate_upload_file_url( 'example.gif' ) . '">';
 
 		$this->assertEquals( $string, self::$plugin_instance->replace_images_in_content( $string ) );
 	}
@@ -90,7 +90,7 @@ class DoFunctionsTest extends WP_UnitTestCase {
 	public function test_imgix_replace_non_wp_images_other_src() {
 		$this->enable_cdn();
 
-		$string = '<img src="https://www.google.com/example.gif" />';
+		$string = '<img src="https://www.google.com/example.gif">';
 
 		$this->assertEquals( $string, self::$plugin_instance->replace_images_in_content( $string ) );
 	}
@@ -98,8 +98,8 @@ class DoFunctionsTest extends WP_UnitTestCase {
 	public function test_imgix_replace_non_wp_images_with_cdn() {
 		$this->enable_cdn();
 
-		$string   = '<img src="' . $this->generate_upload_file_url( 'example.gif' ) . '" />';
-		$expected = '<img src="' . $this->generate_cdn_file_url( 'example.gif' ) . '" />';
+		$string   = '<img src="' . $this->generate_upload_file_url( 'example.gif' ) . '">';
+		$expected = '<img src="' . $this->generate_cdn_file_url( 'example.gif' ) . '">';
 
 		$this->assertEquals( $expected, self::$plugin_instance->replace_images_in_content( $string ) );
 	}
