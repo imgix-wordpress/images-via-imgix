@@ -103,15 +103,16 @@ class Images_Via_Imgix {
 					} else {
 						unset( $parsed_url[ $url_part ] );
 					}
-				}
-				$url = http_build_url( $parsed_url );
+					$url = http_build_url( $parsed_url );
 
-				$url = add_query_arg( $this->get_global_params(), $url );
+					$url = add_query_arg( $this->get_global_params(), $url );
+				}
 			}
 		}
 
 		return $url;
 	}
+
 
 	/**
 	 * Set params when running image_downsize
@@ -168,6 +169,7 @@ class Images_Via_Imgix {
 	public function calculate_image_srcset( $image_meta, $size_array, $image_src ) {
 		foreach ( $image_meta as $i => $image_size ) {
 			if ( $image_size['descriptor'] === 'w' ) {
+				$image_src = remove_query_arg( 'h', $image_src );
 				$image_meta[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
 			}
 		}
