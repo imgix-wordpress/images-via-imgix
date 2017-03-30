@@ -1,7 +1,7 @@
 {
   "name": "imgix-wordpress/images-via-imgix",
   "type": "wordpress-plugin",
-  "license": "BSD-2.0",
+  "license": "BSD-2-Clause",
   "description": "imgix WordPress plugin",
   "homepage": "https://github.com/imgix-wordpress/images-via-imgix",
   "keywords": [
