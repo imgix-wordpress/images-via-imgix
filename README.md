@@ -26,7 +26,7 @@ Getting Started
 
 1. If you don't already have an imgix account then sign up at [imgix.com](http://www.imgix.com).
 
-2. Create a `Web Folder` imgix source with the `Base URL` set to your WordPress root URL (__without__ the `wp-content` part). For example, if your WordPress instance is at [http://example.com](http://example.com) and an example image is `http://example.com/wp-content/uploads/2017/01/image.jpg` then your source's `Base URL` would be just `http://example.com/`.
+2. Create a [Web Folder](https://docs.imgix.com/setup/creating-sources?_ga=1.228802268.1751422556.1481199898#source-web-folder) imgix source with the `Base URL` set to your WordPress root URL (__without__ the `wp-content` part). For example, if your WordPress instance is at [http://example.com](http://example.com) and an example image is `http://example.com/wp-content/uploads/2017/01/image.jpg` then your source's `Base URL` would be just `http://example.com/`.
 
 3. [Download](https://github.com/imgix-wordpress/imgix-wordpress/releases) the imgix WordPress plugin `imgix_plugin.zip` and install on your WordPress instance. In the WordPress admin, click "Plugins" on the right and then "Add New". This will take you to a page to upload the `imgix_plugin.zip` file. Alternatively, you can extract the contents of `imgix_plugin.zip` into the `wp-content/plugins` directory of your WordPress instance.
 
