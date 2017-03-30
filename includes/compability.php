@@ -27,3 +27,23 @@ if ( ! function_exists( 'http_build_url' ) ) {
 		return "$scheme$user$pass$host$port$path$query$fragment";
 	}
 }
+
+if ( ! function_exists( 'wp_get_additional_image_sizes' ) ) {
+	/**
+	 * Retrieve additional image sizes.
+	 *
+	 * @since 4.7.0
+	 *
+	 * @global array $_wp_additional_image_sizes
+	 *
+	 * @return array Additional images size data.
+	 */
+	function wp_get_additional_image_sizes() {
+		global $_wp_additional_image_sizes;
+		if ( ! $_wp_additional_image_sizes ) {
+			$_wp_additional_image_sizes = [];
+		}
+
+		return $_wp_additional_image_sizes;
+	}
+}
