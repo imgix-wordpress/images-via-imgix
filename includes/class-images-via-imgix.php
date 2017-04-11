@@ -103,16 +103,15 @@ class Images_Via_Imgix {
 					} else {
 						unset( $parsed_url[ $url_part ] );
 					}
-					$url = http_build_url( $parsed_url );
-
-					$url = add_query_arg( $this->get_global_params(), $url );
 				}
+				$url = http_build_url( $parsed_url );
+
+				$url = add_query_arg( $this->get_global_params(), $url );
 			}
 		}
 
 		return $url;
 	}
-
 
 	/**
 	 * Set params when running image_downsize
@@ -188,7 +187,7 @@ class Images_Via_Imgix {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			if ( preg_match_all( '/<img\s[^>]*src=([\"\']??)([^\" >]*?)\1[^>]*>/iU', $content, $matches ) ) {
 				foreach ( $matches[2] as $image_src ) {
-					$content = str_replace( $image_src, $this->replace_image_url( $image_src ), $content );
+					$content = str_replace( $image_src, apply_filters( 'wp_get_attachment_url', $image_src ), $content );
 				}
 			}
 
@@ -196,7 +195,7 @@ class Images_Via_Imgix {
 
 				foreach ( $matches[2] as $image_srcset ) {
 					$new_image_srcset = preg_replace_callback( '/(\S+)(\s\d+\w)/', function ( $srcset_matches ) {
-						return $this->replace_image_url( $srcset_matches[1] ) . $srcset_matches[2];
+						return apply_filters( 'wp_get_attachment_url', $srcset_matches[1] ) . $srcset_matches[2];
 					}, $image_srcset );
 
 					$content = str_replace( $image_srcset, $new_image_srcset, $content );
@@ -205,7 +204,7 @@ class Images_Via_Imgix {
 
 			if ( preg_match_all( '/<a\s[^>]*href=([\"\']??)([^\" >]*?)\1[^>]*>(.*)<\/a>/iU', $content, $matches ) ) {
 				foreach ( $matches[0] as $link ) {
-					$content = str_replace( $link[2], $this->replace_image_url( $link[2] ), $content );
+					$content = str_replace( $link[2], apply_filters( 'wp_get_attachment_url', $link[2] ), $content );
 				}
 			}
 		}
