@@ -166,13 +166,15 @@ class Images_Via_Imgix {
 	 * @return array
 	 */
 	public function calculate_image_srcset( $image_meta, $size_array, $image_src ) {
-		foreach ( $image_meta as $i => $image_size ) {
-			if ( $image_size['descriptor'] === 'w' ) {
-				$image_src = remove_query_arg( 'h', $image_src );
-				$image_meta[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
+		if ( ! empty ( $this->options['cdn_link'] ) ) {
+			foreach ( $image_meta as $i => $image_size ) {
+				if ( $image_size['descriptor'] === 'w' ) {
+					$image_src = remove_query_arg( 'h', $image_src );
+					$image_meta[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
+				}
 			}
 		}
-
+		
 		return $image_meta;
 	}
 
