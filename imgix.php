@@ -11,7 +11,7 @@
  * Plugin Name: Images via imgix
  * Plugin URI:  https://github.com/imgix-wordpress/images-via-imgix
  * Description: A WordPress plugin to automatically use your existing (and future) WordPress images from <a href="http://www.imgix.com" target="_blank">imgix</a> for smaller, faster, and better looking images. <a href="https://github.com/imgix-wordpress/images-via-imgix" target="_blank">Learn more</a>.
- * Version:     1.3.0
+ * Version:     1.3.2
  * Author:      wladston
  * Author URI:  http://github.com/imgix-wordpress
  */
