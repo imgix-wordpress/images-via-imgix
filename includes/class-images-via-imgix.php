@@ -34,7 +34,7 @@ class Images_Via_Imgix {
 
 		add_filter( 'image_downsize', [ $this, 'image_downsize' ], 10, 3 );
 
-		add_filter( 'wp_calculate_image_srcset', [ $this, 'calculate_image_srcset' ], 10, 3 );
+		add_filter( 'wp_calculate_image_srcset', [ $this, 'calculate_image_srcset' ], 10, 5 );
 
 		add_filter( 'the_content', [ $this, 'replace_images_in_content' ] );
 		add_action( 'wp_head', [ $this, 'prefetch_cdn' ], 1 );
@@ -159,23 +159,29 @@ class Images_Via_Imgix {
 	/**
 	 * Change url for images in srcset
 	 *
-	 * @param array  $image_meta
+	 * @param array  $sources
 	 * @param array  $size_array
 	 * @param string $image_src
+	 * @param array  $image_meta
+	 * @param int    $attachment_id
 	 *
 	 * @return array
 	 */
-	public function calculate_image_srcset( $image_meta, $size_array, $image_src ) {
+	public function calculate_image_srcset( $sources, $size_array, $image_src, $image_meta, $attachment_id ) {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
-			foreach ( $image_meta as $i => $image_size ) {
+			foreach ( $sources as $i => $image_size ) {
 				if ( $image_size['descriptor'] === 'w' ) {
-					$image_src = remove_query_arg( 'h', $image_src );
-					$image_meta[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
+					if ( $attachment_id ) {
+						$image_src = wp_get_attachment_url( $attachment_id );
+					}
+
+					$image_src            = remove_query_arg( 'h', $image_src );
+					$sources[ $i ]['url'] = add_query_arg( 'w', $image_size['value'], $image_src );
 				}
 			}
 		}
-		
-		return $image_meta;
+
+		return $sources;
 	}
 
 	/**
