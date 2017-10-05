@@ -63,6 +63,14 @@ class Imgix_Options_page {
 								<input id="imgix_settings[cdn_link]" type="url" name="imgix_settings[cdn_link]" placeholder="https://yourcompany.imgix.net" value="<?php echo $this->get_option( 'cdn_link' ); ?>" class="regular-text code"/>
 							</td>
 						</tr>
+                        <tr>
+                            <th>
+                                <label class="description" for="imgix_settings[external_cdn_link]"><?php esc_html_e( 'CDN URL', 'imgix' ); ?>
+                            </th>
+                            <td>
+                                <input id="imgix_settings[external_cdn_link]" type="url" name="imgix_settings[external_cdn_link]" placeholder="http://s3-eu-west-2.amazonaws.com/your-bucket" value="<?php echo $this->get_option( 'external_cdn_link' ); ?>" class="regular-text code"/>
+                            </td>
+                        </tr>
 						<tr>
 							<th>
 								<label class="description" for="imgix_settings[auto_format]"><?php esc_html_e( 'Auto Format Images', 'imgix' ); ?></label>

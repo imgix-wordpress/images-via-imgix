@@ -29,7 +29,8 @@ class Images_Via_Imgix {
 	public function __construct() {
 		$this->options = get_option( 'imgix_settings', [] );
 
-		add_filter( 'wp_get_attachment_url', [ $this, 'replace_image_url' ] );
+		//Change filter load order to ensure it loads after other CDN url transformations i.e. Amazon S3 which loads at position 99.
+		add_filter( 'wp_get_attachment_url', [ $this, 'replace_image_url' ], 100 );
 		add_filter( 'imgix/add-image-url', [ $this, 'replace_image_url' ] );
 
 		add_filter( 'image_downsize', [ $this, 'image_downsize' ], 10, 3 );
@@ -95,7 +96,8 @@ class Images_Via_Imgix {
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			$parsed_url = parse_url( $url );
 
-			if ( isset( $parsed_url['host'], $parsed_url['path'] ) && $parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) && preg_match( '/\.(jpg|jpeg|gif|png)$/', $parsed_url['path'] ) ) {
+			//Check if image is hosted on current site url -OR- the CDN url specified. Using strpos because we're comparing the host to a full CDN url.
+			if ( isset( $parsed_url['host'], $parsed_url['path'] ) && ($parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) || strpos(($this->options['external_cdn_link'] ? $this->options['external_cdn_link'] : ""), $parsed_url['host']) !== false) && preg_match( '/\.(jpg|jpeg|gif|png)$/i', $parsed_url['path'] ) ) {
 				$cdn = parse_url( $this->options['cdn_link'] );
 				foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
 					if ( isset( $cdn[ $url_part ] ) ) {
@@ -104,6 +106,10 @@ class Images_Via_Imgix {
 						unset( $parsed_url[ $url_part ] );
 					}
 				}
+				//Modify the CDN URL, we won't need any parts after the host.
+                $parsed_cdn_url = parse_url($this->options['external_cdn_link']);
+                $parsed_url['path'] = str_replace($parsed_cdn_url['path'], "", $parsed_url['path']);
+
 				$url = http_build_url( $parsed_url );
 
 				$url = add_query_arg( $this->get_global_params(), $url );
@@ -192,10 +198,11 @@ class Images_Via_Imgix {
 	 * @return string
 	 */
 	public function replace_images_in_content( $content ) {
+	    //Added null to apply filters wp_get_attachment_url to improve compatibility with https://en-gb.wordpress.org/plugins/amazon-s3-and-cloudfront/ - does not break wordpress if the plugin isn't present.
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			if ( preg_match_all( '/<img\s[^>]*src=([\"\']??)([^\" >]*?)\1[^>]*>/iU', $content, $matches ) ) {
 				foreach ( $matches[2] as $image_src ) {
-					$content = str_replace( $image_src, apply_filters( 'wp_get_attachment_url', $image_src ), $content );
+					$content = str_replace( $image_src, apply_filters( 'wp_get_attachment_url', $image_src, null ), $content );
 				}
 			}
 
@@ -203,7 +210,7 @@ class Images_Via_Imgix {
 
 				foreach ( $matches[2] as $image_srcset ) {
 					$new_image_srcset = preg_replace_callback( '/(\S+)(\s\d+\w)/', function ( $srcset_matches ) {
-						return apply_filters( 'wp_get_attachment_url', $srcset_matches[1] ) . $srcset_matches[2];
+						return apply_filters( 'wp_get_attachment_url', $srcset_matches[1], null ) . $srcset_matches[2];
 					}, $image_srcset );
 
 					$content = str_replace( $image_srcset, $new_image_srcset, $content );
@@ -212,11 +219,10 @@ class Images_Via_Imgix {
 
 			if ( preg_match_all( '/<a\s[^>]*href=([\"\']??)([^\" >]*?)\1[^>]*>(.*)<\/a>/iU', $content, $matches ) ) {
 				foreach ( $matches[0] as $link ) {
-					$content = str_replace( $link[2], apply_filters( 'wp_get_attachment_url', $link[2] ), $content );
+					$content = str_replace( $link[2], apply_filters( 'wp_get_attachment_url', $link[2], null ), $content );
 				}
 			}
 		}
-
 		return $content;
 	}
 
