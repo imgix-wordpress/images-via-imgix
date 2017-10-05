@@ -106,7 +106,7 @@ class Images_Via_Imgix {
 						unset( $parsed_url[ $url_part ] );
 					}
 				}
-				if ( ! empty($this->options['external_cdn_link'] ) ) {
+				if ( ! empty( $this->options['external_cdn_link'] ) ) {
                     //Modify the CDN URL, we won't need any parts after the host.
                     $parsed_cdn_url = parse_url( $this->options['external_cdn_link'] );
                     $parsed_url['path'] = str_replace( $parsed_cdn_url['path'], "", $parsed_url['path'] );
