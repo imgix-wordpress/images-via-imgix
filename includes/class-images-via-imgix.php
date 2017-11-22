@@ -41,7 +41,7 @@ class Images_Via_Imgix {
 		add_action( 'wp_head', [ $this, 'prefetch_cdn' ], 1 );
 
 		add_action( 'after_setup_theme', [ $this, 'buffer_start_for_retina' ] );
-		add_action( 'shutdown', [ $this, 'buffer_end_for_retina' ] );
+		add_action( 'shutdown', [ $this, 'buffer_end_for_retina' ], 0 );
 	}
 
 	/**
@@ -251,8 +251,7 @@ class Images_Via_Imgix {
 	 */
 	public function buffer_start_for_retina() {
 		if ( ! empty ( $this->options['add_dpi2_srcset'] ) ) {
-			$this->buffer_started = true;
-			ob_start( [ $this, 'add_retina' ] );
+			$this->buffer_started = ob_start( [ $this, 'add_retina' ] );
 		}
 	}
 
@@ -260,7 +259,7 @@ class Images_Via_Imgix {
 	 * Stop output buffer if it was enabled by the plugin
 	 */
 	public function buffer_end_for_retina() {
-		if ( $this->buffer_started === true ) {
+		if ( $this->buffer_started && ob_get_level() ) {
 			ob_end_flush();
 		}
 	}
