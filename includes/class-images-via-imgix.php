@@ -58,6 +58,27 @@ class Images_Via_Imgix {
 	}
 
 	/**
+	 * Set a single option.
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 */
+	public function set_option( $key, $value ) {
+		$this->options[ $key ] = $value;
+	}
+
+	/**
+	 * Get a single option.
+	 *
+	 * @param  string $key
+	 * @param  mixed $default
+	 * @return mixed
+	 */
+	public function get_option( $key, $default = '' ) {
+		return array_key_exists( $key, $this->options ) ? $this->options[ $key ] : $default;
+	}
+
+	/**
 	 * Override options from settings.
 	 * Used in unit tests.
 	 *
@@ -97,12 +118,13 @@ class Images_Via_Imgix {
 			$parsed_url = parse_url( $url );
 
 			//Check if image is hosted on current site url -OR- the CDN url specified. Using strpos because we're comparing the host to a full CDN url.
-            if (
-                isset( $parsed_url['host'], $parsed_url['path'] )
-                && ($parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) || ( isset($this->options['external_cdn_link']) && ! empty($this->options['external_cdn_link']) && strpos( $this->options['external_cdn_link'], $parsed_url['host']) !== false ) )
-                && preg_match( '/\.(jpg|jpeg|gif|png)$/i', $parsed_url['path'] )
-            ) {
+			if (
+				isset( $parsed_url['host'], $parsed_url['path'] )
+				&& ($parsed_url['host'] === parse_url( home_url( '/' ), PHP_URL_HOST ) || ( isset($this->options['external_cdn_link']) && ! empty($this->options['external_cdn_link']) && strpos( $this->options['external_cdn_link'], $parsed_url['host']) !== false ) )
+				&& preg_match( '/\.(jpg|jpeg|gif|png)$/i', $parsed_url['path'] )
+			) {
 				$cdn = parse_url( $this->options['cdn_link'] );
+
 				foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
 					if ( isset( $cdn[ $url_part ] ) ) {
 						$parsed_url[ $url_part ] = $cdn[ $url_part ];
@@ -110,11 +132,14 @@ class Images_Via_Imgix {
 						unset( $parsed_url[ $url_part ] );
 					}
 				}
+
 				if ( ! empty( $this->options['external_cdn_link'] ) ) {
-                    //Modify the CDN URL, we won't need any parts after the host.
-                    $parsed_cdn_url = parse_url( $this->options['external_cdn_link'] );
-                    $parsed_url['path'] = str_replace( $parsed_cdn_url['path'], "", $parsed_url['path'] );
-                }
+					$cdn_path = parse_url( $this->options['external_cdn_link'],  PHP_URL_PATH );
+
+					if ( isset( $cdn_path, $parsed_url['path'] ) && $cdn_path !== '/' && ! empty( $parsed_url['path'] ) ) {
+						$parsed_url['path'] = str_replace( $cdn_path, '', $parsed_url['path'] );
+					}
+				}
 
 				$url = http_build_url( $parsed_url );
 
@@ -158,11 +183,11 @@ class Images_Via_Imgix {
 			if ( ! isset( $width ) || ! isset( $height ) ) {
 				// any other type: use the real image
 				$meta   = wp_get_attachment_metadata( $attachment_id );
-				
+
 				// Image sizes is missing for pdf thumbnails
 				$meta['width']  = isset( $meta['width'] ) ? $meta['width'] : 0;
 				$meta['height'] = isset( $meta['height'] ) ? $meta['height'] : 0;
-				
+
 				$width  = isset( $width ) ? $width : $meta['width'];
 				$height = isset( $height ) ? $height : $meta['height'];
 			}
@@ -209,7 +234,7 @@ class Images_Via_Imgix {
 	 * @return string
 	 */
 	public function replace_images_in_content( $content ) {
-	    // Added null to apply filters wp_get_attachment_url to improve compatibility with https://en-gb.wordpress.org/plugins/amazon-s3-and-cloudfront/ - does not break wordpress if the plugin isn't present.
+		// Added null to apply filters wp_get_attachment_url to improve compatibility with https://en-gb.wordpress.org/plugins/amazon-s3-and-cloudfront/ - does not break wordpress if the plugin isn't present.
 		if ( ! empty ( $this->options['cdn_link'] ) ) {
 			if ( preg_match_all( '/<img\s[^>]*src=([\"\']??)([^\" >]*?)\1[^>]*>/iU', $content, $matches ) ) {
 				foreach ( $matches[2] as $image_src ) {
