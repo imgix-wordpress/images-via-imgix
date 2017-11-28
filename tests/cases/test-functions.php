@@ -104,13 +104,47 @@ class DoFunctionsTest extends WP_UnitTestCase {
 		$this->assertEquals( $expected, self::$plugin_instance->replace_images_in_content( $string ) );
 	}
 
+	public function test_option() {
+		self::$plugin_instance->set_options([
+			'some-int' => 1,
+		]);
+
+		$this->assertEquals( self::$plugin_instance->get_option('some-int'), 1 );
+		$this->assertEquals( self::$plugin_instance->get_option('missing-option', 'default'), 'default' );
+
+		self::$plugin_instance->set_option('some-int', 2);
+
+		$this->assertEquals( self::$plugin_instance->get_option('some-int'), 2 );
+	}
+
+	public function test_external_cdn() {
+		$this->enable_cdn();
+		$this->enable_external_cdn();
+
+		$cdn_url = $this->generate_cdn_file_url('example.gif');
+		$external_cdn_url = $this->generate_external_cdn_file_url( 'example.gif' );
+		$url = self::$plugin_instance->replace_image_url( $external_cdn_url );
+
+		$this->assertEquals( $cdn_url, $url );
+
+		$this->disable_cdn();
+	}
+
 	protected function generate_upload_file_url( $filename ) {
 		return trailingslashit( self::$upload_url ) . $filename;
 	}
 
 	protected function generate_cdn_file_url( $filename ) {
+		return $this->generate_cdn_file_url_from_option( $filename, 'cdn_link');
+	}
+
+	protected function generate_external_cdn_file_url( $filename ) {
+		return $this->generate_cdn_file_url_from_option( $filename, 'external_cdn_link');
+	}
+
+	protected function generate_cdn_file_url_from_option( $filename, $option ) {
 		$file_url = parse_url( $this->generate_upload_file_url( $filename ) );
-		$cdn      = parse_url( 'https://my-source.imgix.com' );
+		$cdn      = parse_url( self::$plugin_instance->get_option( $option ) );
 
 		foreach ( [ 'scheme', 'host', 'port' ] as $url_part ) {
 			if ( isset( $cdn[ $url_part ] ) ) {
@@ -126,13 +160,14 @@ class DoFunctionsTest extends WP_UnitTestCase {
 	}
 
 	protected function enable_cdn() {
-		self::$plugin_instance->set_options( [
-			'cdn_link' => 'https://my-source.imgix.com'
-		] );
+		self::$plugin_instance->set_option('cdn_link', 'https://my-source.imgix.com');
+	}
+
+	protected function enable_external_cdn() {
+		self::$plugin_instance->set_option('external_cdn_link', 'https://cdn.example.org');
 	}
 
 	protected function disable_cdn() {
 		self::$plugin_instance->set_options( [] );
 	}
 }
-
