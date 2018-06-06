@@ -258,6 +258,12 @@ class Images_Via_Imgix {
 					$content = str_replace( $link[2], apply_filters( 'wp_get_attachment_url', $link[2], null ), $content );
 				}
 			}
+
+      if ( preg_match_all('/url\(([\s])?([\"|\'])?(.*?)([\"|\'])?([\s])?\)/i', $content, $matches ) ) {
+        foreach ( $matches[3] as $image_src ) {
+          $content = str_replace( $image_src, apply_filters( 'wp_get_attachment_url', $image_src, null ), $content );
+        }
+      }
 		}
 		return $content;
 	}
